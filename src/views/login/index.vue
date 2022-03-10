@@ -72,7 +72,7 @@
       </div>
     </el-form>
 
-    <el-dialog title="微信扫码登录" :visible.sync="showDialog" align="center" width="30%">
+    <el-dialog title="微信扫码登录" :visible.sync="showDialog" align="center" width="30%" @close="wxLoginClose">
       <div>
         <img :src="qrUrl" alt="小程序码" height="200">
         <div style="margin:15px 0">请使用微信扫描小程序码登录{{ bindTimeout ? '(已超时)' : '' }}</div>
@@ -156,6 +156,11 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
+    //关闭弹窗清除定时器
+    wxLoginClose() {
+      this.timer && clearTimeout(this.timer)
+      this.bindTimeout = false
+    },
     // 点击其他方式登录
     otherLogin() {
       const _this = this
@@ -187,7 +192,7 @@ export default {
               // 登录跳转
               _this.$store.dispatch('user/login', _this.loginForm)
                 .then(() => {
-                  _this.$router.push({ path: _this.redirect || '/', query: _this.otherQuery })
+                  _this.$router.push({ path: _this.redirect || '/dashboard', query: _this.otherQuery })
                   _this.loading = false
                 })
                 .catch(() => {
@@ -204,7 +209,7 @@ export default {
     authChange(val) {
       console.log(val)
       this.$nextTick(function() {
-        this.qrUrl = `/api/getCode?&uuid=${this.uuid}` + '&useAuth=' + (val ? 1 : 0)
+        this.qrUrl = `/api/getCode?uuid=${this.uuid}` + '&useAuth=' + (val ? 1 : 0)
       })
     },
     checkCapslock(e) {

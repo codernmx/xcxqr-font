@@ -72,7 +72,7 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/charts/keyboard',
     children: [
       {
         path: 'dashboard',
