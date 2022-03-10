@@ -2,6 +2,15 @@
  * Created by PanJiaChen on 16/11/18.
  */
 
+// 生成uuid
+export function GlobalGetUuidShort() {
+  return 'xxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = (Math.random() * 16) | 0
+    var v = c == 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
+
 /**
  * Parse the time to string
  * @param {(Object|string|number)} time
@@ -45,7 +54,7 @@ export function parseTime(time, cFormat) {
   const time_str = format.replace(/{([ymdhisa])+}/g, (result, key) => {
     const value = formatObj[key]
     // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
+    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value] }
     return value.toString().padStart(2, '0')
   })
   return time_str

@@ -12,7 +12,7 @@ export function getInfo(token) {
   return request({
     url: '/vue-element-admin/user/info',
     method: 'get',
-    params: {token}
+    params: { token }
   })
 }
 
@@ -23,7 +23,7 @@ export function logout() {
   })
 }
 
-
+// 获取二维码
 export function getCode(params) {
   return request({
     url: '/getCode',
@@ -31,6 +31,7 @@ export function getCode(params) {
     params
   })
 }
+// 获取token
 export function getToken(params) {
   return request({
     url: '/getToken',
@@ -38,3 +39,12 @@ export function getToken(params) {
     params
   })
 }
+// 获取uuid
+export function getUUid(params) {
+  return request({
+    url: '/uuid',
+    method: 'get',
+    params
+  })
+}
+

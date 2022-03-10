@@ -277,7 +277,7 @@ export const asyncRoutes = [
         path: 'documentation/index',
         component: () => import('@/views/documentation/index'),
         name: 'Documentation',
-        meta: { title: 'documentation', affix: true }
+        meta: { title: 'documentation' }
       },
       {
         path: 'guide/index',

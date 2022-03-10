@@ -1,12 +1,19 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
+    <el-form
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+      autocomplete="on"
+      label-position="left"
+    >
 
       <div class="title-container">
         <h3 class="title">
           {{ $t('login.title') }}
         </h3>
-        <lang-select class="set-language" />
+        <!-- <lang-select class="set-language" /> -->
       </div>
 
       <el-form-item prop="username">
@@ -48,20 +55,32 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
+      <el-button
+        :loading="loading"
+        type="primary"
+        style="width:100%;margin-bottom:30px;"
+        @click.native.prevent="handleLogin"
+      >
         {{ $t('login.logIn') }}
       </el-button>
 
       <div style="position:relative">
         <div class="other-login">
           <div class="title">推荐使用其他方式登录</div>
-          <img src="@/assets/mp.png" class="wx-logo" title="小程序登录" alt="小程序登录" @click="showDialog=true" />
+          <img src="@/assets/mp.png" class="wx-logo" title="小程序登录" alt="小程序登录" @click="otherLogin">
         </div>
       </div>
     </el-form>
 
     <el-dialog title="微信扫码登录" :visible.sync="showDialog" align="center" width="30%">
-      <social-sign />
+      <div>
+        <img :src="qrUrl" alt="小程序码" height="200">
+        <div style="margin:15px 0">请使用微信扫描小程序码登录{{ bindTimeout ? '(已超时)' : '' }}</div>
+        <div>
+          启用授权获取用户信息：
+          <el-switch v-model="auth" active-color="#13ce66" inactive-color="#ff4949" @change="authChange" />
+        </div>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -69,11 +88,12 @@
 <script>
 import { validUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
-import SocialSign from './components/SocialSignin'
+import { getCode, getToken, getUUid } from '@/api/user'
+import { GlobalGetUuidShort } from '@/utils/index'
 
 export default {
   name: 'Login',
-  components: { LangSelect, SocialSign },
+  components: { LangSelect },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -90,6 +110,10 @@ export default {
       }
     }
     return {
+      qrUrl: '',
+      auth: true,
+      bindTimeout: false,
+      timer: null, // 定时器
       loginForm: {
         username: 'admin',
         password: '111111'
@@ -132,6 +156,57 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
+    // 点击其他方式登录
+    otherLogin() {
+      const _this = this
+      this.showDialog = true
+      getToken()
+      const uuid = GlobalGetUuidShort()
+      this.uuid = uuid
+      this.qrUrl = `/api/getCode?useAuth=1&uuid=${uuid}`
+      let counter = 1
+      // 清除定时器重新开启
+      this.timer && clearTimeout(this.timer)
+      this.timer = setInterval(function() {
+        getUUid({ uuid })// 获取openid
+          .then((res) => {
+            counter++
+            if (counter === 60) {
+              clearTimeout(_this.timer)
+              _this.bindTimeout = true
+            }
+            if (res.data.openid !== '') {
+              const { nickname, avatar, openid } = res.data
+              // 存到storage
+              localStorage.setItem('nickname', nickname)
+              localStorage.setItem('avatar', avatar)
+
+              clearTimeout(_this.timer)
+              _this.showDialog = false
+              _this.loading = true
+              // 登录跳转
+              _this.$store.dispatch('user/login', _this.loginForm)
+                .then(() => {
+                  _this.$router.push({ path: _this.redirect || '/', query: _this.otherQuery })
+                  _this.loading = false
+                })
+                .catch(() => {
+                  _this.loading = false
+                })
+            }
+          })
+          .catch((err) => {
+            clearTimeout(this.timer)
+          })
+      }, 3000)
+    },
+    // 修改选项重新获取qr
+    authChange(val) {
+      console.log(val)
+      this.$nextTick(function() {
+        this.qrUrl = `/api/getCode?&uuid=${this.uuid}` + '&useAuth=' + (val ? 1 : 0)
+      })
+    },
     checkCapslock(e) {
       const { key } = e
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
@@ -198,8 +273,8 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
-$light_gray:#fff;
+$bg: #283443;
+$light_gray: #fff;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -242,9 +317,9 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg: #2d3a4b;
+$dark_gray: #889aa4;
+$light_gray: #eee;
 
 .login-container {
   min-height: 100%;
