@@ -1,13 +1,7 @@
 <template>
   <div class="login-container">
-    <el-form
-      ref="loginForm"
-      :model="loginForm"
-      :rules="loginRules"
-      class="login-form"
-      autocomplete="on"
-      label-position="left"
-    >
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on"
+      label-position="left">
 
       <div class="title-container">
         <h3 class="title">
@@ -20,15 +14,8 @@
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
-        <el-input
-          ref="username"
-          v-model="loginForm.username"
-          :placeholder="$t('login.username')"
-          name="username"
-          type="text"
-          tabindex="1"
-          autocomplete="on"
-        />
+        <el-input ref="username" v-model="loginForm.username" :placeholder="$t('login.username')" name="username"
+          type="text" tabindex="1" autocomplete="on" />
       </el-form-item>
 
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
@@ -36,31 +23,17 @@
           <span class="svg-container">
             <svg-icon icon-class="password" />
           </span>
-          <el-input
-            :key="passwordType"
-            ref="password"
-            v-model="loginForm.password"
-            :type="passwordType"
-            :placeholder="$t('login.password')"
-            name="password"
-            tabindex="2"
-            autocomplete="on"
-            @keyup.native="checkCapslock"
-            @blur="capsTooltip = false"
-            @keyup.enter.native="handleLogin"
-          />
+          <el-input :key="passwordType" ref="password" v-model="loginForm.password" :type="passwordType"
+            :placeholder="$t('login.password')" name="password" tabindex="2" autocomplete="on"
+            @keyup.native="checkCapslock" @blur="capsTooltip = false" @keyup.enter.native="handleLogin" />
           <span class="show-pwd" @click="showPwd">
             <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
           </span>
         </el-form-item>
       </el-tooltip>
 
-      <el-button
-        :loading="loading"
-        type="primary"
-        style="width:100%;margin-bottom:30px;"
-        @click.native.prevent="handleLogin"
-      >
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
+        @click.native.prevent="handleLogin">
         {{ $t('login.logIn') }}
       </el-button>
 
@@ -76,10 +49,11 @@
       <div>
         <img :src="qrUrl" alt="小程序码" height="200">
         <div style="margin:15px 0">请使用微信扫描小程序码登录{{ bindTimeout ? '(已超时)' : '' }}</div>
-        <div>
+        <!-- (后期考虑是否启用选择性授权) -->
+        <!-- <div>
           启用授权获取用户信息：
           <el-switch v-model="auth" active-color="#13ce66" inactive-color="#ff4949" @change="authChange" />
-        </div>
+        </div> -->
       </div>
     </el-dialog>
   </div>
@@ -87,14 +61,13 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import LangSelect from '@/components/LangSelect'
 import { getCode, getToken, getUUid } from '@/api/user'
 import { GlobalGetUuidShort } from '@/utils/index'
 
 export default {
   name: 'Login',
-  components: { LangSelect },
-  data() {
+  components: {},
+  data () {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
         callback(new Error('Please enter the correct user name'))
@@ -132,7 +105,7 @@ export default {
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         const query = route.query
         if (query) {
           this.redirect = query.redirect
@@ -142,27 +115,27 @@ export default {
       immediate: true
     }
   },
-  created() {
+  created () {
     // window.addEventListener('storage', this.afterQRScan)
   },
-  mounted() {
+  mounted () {
     if (this.loginForm.username === '') {
       this.$refs.username.focus()
     } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }
   },
-  destroyed() {
+  destroyed () {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
     //关闭弹窗清除定时器
-    wxLoginClose() {
+    wxLoginClose () {
       this.timer && clearTimeout(this.timer)
       this.bindTimeout = false
     },
     // 点击其他方式登录
-    otherLogin() {
+    otherLogin () {
       const _this = this
       this.showDialog = true
       getToken()
@@ -172,7 +145,7 @@ export default {
       let counter = 1
       // 清除定时器重新开启
       this.timer && clearTimeout(this.timer)
-      this.timer = setInterval(function() {
+      this.timer = setInterval(function () {
         getUUid({ uuid })// 获取openid
           .then((res) => {
             counter++
@@ -185,12 +158,11 @@ export default {
               // 存到storage
               localStorage.setItem('nickname', nickname)
               localStorage.setItem('avatar', avatar)
-
               clearTimeout(_this.timer)
               _this.showDialog = false
               _this.loading = true
-              // 登录跳转
-              _this.$store.dispatch('user/login', _this.loginForm)
+              // 登录跳转 (扫码登录)
+              _this.$store.dispatch('user/login', res.data)
                 .then(() => {
                   _this.$router.push({ path: _this.redirect || '/dashboard', query: _this.otherQuery })
                   _this.loading = false
@@ -206,17 +178,17 @@ export default {
       }, 3000)
     },
     // 修改选项重新获取qr
-    authChange(val) {
+    authChange (val) {
       console.log(val)
-      this.$nextTick(function() {
+      this.$nextTick(function () {
         this.qrUrl = `/api/getCode?uuid=${this.uuid}` + '&useAuth=' + (val ? 1 : 0)
       })
     },
-    checkCapslock(e) {
+    checkCapslock (e) {
       const { key } = e
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
     },
-    showPwd() {
+    showPwd () {
       if (this.passwordType === 'password') {
         this.passwordType = ''
       } else {
@@ -226,25 +198,26 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin() {
+    handleLogin () {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
-            })
-            .catch(() => {
-              this.loading = false
-            })
+          this.$message.warning('开发中，目前仅支持扫码登录')
+          // this.loading = true
+          // this.$store.dispatch('user/login', this.loginForm)
+          //   .then(() => {
+          //     this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+          //     this.loading = false
+          //   })
+          //   .catch(() => {
+          //     this.loading = false
+          //   })
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-    getOtherQuery(query) {
+    getOtherQuery (query) {
       return Object.keys(query).reduce((acc, cur) => {
         if (cur !== 'redirect') {
           acc[cur] = query[cur]

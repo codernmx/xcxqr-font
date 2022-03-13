@@ -12,7 +12,7 @@ export function getInfo(token) {
   return request({
     url: '/vue-element-admin/user/info',
     method: 'get',
-    params: { token }
+    params: {token}
   })
 }
 
@@ -23,26 +23,46 @@ export function logout() {
   })
 }
 
+
 // 获取二维码
 export function getCode(params) {
   return request({
-    url: '/getCode',
+    url: '/api/getCode',
     method: 'get',
     params
   })
 }
+
 // 获取token
 export function getToken(params) {
   return request({
-    url: '/getToken',
+    url: '/api/getToken',
     method: 'get',
     params
   })
 }
+
 // 获取uuid
 export function getUUid(params) {
   return request({
-    url: '/uuid',
+    url: '/api/uuid',
+    method: 'get',
+    params
+  })
+}
+
+//获取用户列表
+export function getUserList(params) {
+  return request({
+    url: '/api/bjcx/user/list',
+    method: 'get',
+    params
+  })
+}
+//获取IP列表
+export function getLogList(params) {
+  return request({
+    url: '/api/bjcx/log/list',
     method: 'get',
     params
   })
