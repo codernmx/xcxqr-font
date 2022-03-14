@@ -13,17 +13,10 @@ const componentsRouter = {
   },
   children: [
     {
-      path: '/icon',
-      component: Layout,
-      children: [
-        {
-          path: 'index',
-          component: () => import('@/views/zip/icons/index'),
-          name: 'Icons',
-          meta: {title: 'icons', noCache: true}
-        },
-
-      ]
+      path: 'index',
+      component: () => import('@/views/zip/icons/index'),
+      name: 'Icons',
+      meta: {title: 'icons', noCache: true}
     },
     {
       path: 'tinymce',
