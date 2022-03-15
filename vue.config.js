@@ -34,7 +34,7 @@ module.exports = {
     proxy: {
       '/api/': {
         // target: 'http://127.0.0.1:3000', //本地',
-        target: 'http://49.232.153.152:2002/api', //本地',
+        target: 'http://49.232.153.152:2002', //本地',
         changeOrigin: true, //是否跨域
         pathRewrite: {
           '^/api/': '/api/'

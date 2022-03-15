@@ -34,6 +34,8 @@ const actions = {
     if (userInfo.token) {  //如果扫码登录直接携带了 token
       return new Promise((resolve, reject) => {
         commit('SET_TOKEN', userInfo.token)
+        commit('SET_NAME', userInfo.nickname) //设置昵称
+        commit('SET_AVATAR', userInfo.avatar) //头像
         setToken(userInfo.token)
         resolve()
       })
@@ -68,8 +70,8 @@ const actions = {
       }
 
       commit('SET_ROLES', roles)
-      commit('SET_NAME', name)
-      commit('SET_AVATAR', avatar)
+      // commit('SET_NAME', name)
+      // commit('SET_AVATAR', avatar)
       commit('SET_INTRODUCTION', introduction)
       resolve({
         roles: ['admin'],
