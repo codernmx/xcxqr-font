@@ -145,22 +145,26 @@ export default {
   methods: {
     //获取验证码
     getVerCode () {
-      sendMail(this.loginForm).then(res => {
-        console.log(res, 'res')
-      })
-      var countDown = setInterval(() => {
-        if (this.count < 1) {
-          this.isGeting = false
-          this.disable = false
-          this.getCode = '获取验证码'
-          this.count = 6
-          clearInterval(countDown)
-        } else {
-          this.isGeting = true
-          this.disable = true
-          this.getCode = this.count-- + '秒后重发'
-        }
-      }, 1000)
+      if (this.loginForm.username) {
+        sendMail(this.loginForm).then(res => {
+          console.log(res, 'res')
+        })
+        var countDown = setInterval(() => {
+          if (this.count < 1) {
+            this.isGeting = false
+            this.disable = false
+            this.getCode = '获取验证码'
+            this.count = 60
+            clearInterval(countDown)
+          } else {
+            this.isGeting = true
+            this.disable = true
+            this.getCode = this.count-- + '秒后重发'
+          }
+        }, 1000)
+      } else {
+        this.$notify.error('请必须输入邮箱号码')
+      }
     },
     //关闭弹窗清除定时器
     wxLoginClose () {
@@ -232,10 +236,20 @@ export default {
     handleLogin () {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
+          this.loading = true
           //   this.$message.warning('开发中，目前仅支持扫码登录')
           codeLogin(this.loginForm).then(res => {
             console.log(res, 'res')
-            this.$router.push({ path: this.redirect || '/dashboard', query: this.otherQuery })
+            this.loading = false
+            this.$store.dispatch('user/login', res.data)
+              .then(() => {
+                console.log(55, '55')
+                this.$router.push({ path: this.redirect || '/dashboard', query: this.otherQuery })
+              })
+              .catch(() => {
+                // this.loading = false
+              })
+            //     this.$router.push({ path: this.redirect || '/dashboard', query: this.otherQuery })
           })
           // this.loading = true
           // this.$store.dispatch('user/login', this.loginForm)

@@ -10,7 +10,6 @@ import Layout from '@/layout'
 
 /* Router Modules */
 import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -38,131 +37,116 @@ import chartsRouter from './modules/charts'
  * all roles can be accessed
  */
 export const constantRoutes = [
-  {
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/redirect/:path(.*)',
-        component: () => import('@/views/zip/redirect/index')
-      }
-    ]
-  },
-  {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
-    path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
-    hidden: true
-  },
-  {
-    path: '/404',
-    component: () => import('@/views/error-page/404'),
-    hidden: true
-  },
-  {
-    path: '/401',
-    component: () => import('@/views/error-page/401'),
-    hidden: true
-  },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/charts/keyboard',
-    children: [
-      {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: 'dashboard', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/user',
-    component: Layout,
-    // redirect: '/table/complex-table',
-    name: 'User',
-    meta: {
-      title: '用户管理',
-      icon: 'table'
-    },
-    children: [
-      {
-        path: 'dynamic-table',
-        component: () => import('@/views/pages/user/User'),
-        name: 'DynamicTable',
-        meta: { title: '用户列表' }
-      },
-      {
-        path: 'complex-table',
-        component: () => import('@/views/pages/user/UserLog'),
-        name: 'ComplexTable',
-        meta: { title: '用户日志' }
-      }
-    ]
-  },
+	{
+		path: '/',
+		component: Layout,
+		redirect: '/dashboard',
+		children: [
+			{
+				path: 'dashboard',
+				component: () => import('@/views/dashboard/index'),
+				name: 'Dashboard',
+				meta: { title: 'dashboard', icon: 'dashboard', affix: true }
+			}
+		]
+	},
+	{
+		path: '/redirect',
+		component: Layout,
+		hidden: true,
+		children: [
+			{
+				path: '/redirect/:path(.*)',
+				component: () => import('@/views/zip/redirect/index')
+			}
+		]
+	},
+	{
+		path: '/login',
+		component: () => import('@/views/login/index'),
+		hidden: true
+	},
+	{
+		path: '/auth-redirect',
+		component: () => import('@/views/login/auth-redirect'),
+		hidden: true
+	},
+	{
+		path: '/404',
+		component: () => import('@/views/error-page/404'),
+		hidden: true
+	},
+	{
+		path: '/401',
+		component: () => import('@/views/error-page/401'),
+		hidden: true
+	},
 
-
-
-
-
-
-
-  chartsRouter,
-  {
-    path: '/profile',
-    component: Layout,
-    redirect: '/profile/index',
-    hidden: true,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/profile/index'),
-        name: 'Profile',
-        meta: { title: 'profile', icon: 'user', noCache: true }
-      }
-    ]
-  }
+	{
+		path: '/profile',
+		component: Layout,
+		redirect: '/profile/index',
+		hidden: true,
+		children: [
+			{
+				path: 'index',
+				component: () => import('@/views/profile/index'),
+				name: 'Profile',
+				meta: { title: 'profile', icon: 'user', noCache: true }
+			}
+		]
+	}
 ]
 
 /**
  * asyncRoutes
- * the routes that need to be dynamically loaded based on user roles
+ * 需要根据用户角色动态加载的路由
  */
 export const asyncRoutes = [
+	{
+		path: '/user',
+		component: Layout,
+		name: 'User',
+		meta: {
+			title: '用户管理',
+			icon: 'table',
+			roles: ['1']  //超级管理员
 
+		},
+		children: [
+			{
+				path: 'dynamic-table',
+				component: () => import('@/views/pages/user/User'),
+				name: 'DynamicTable',
+				meta: { title: '用户列表' }
+			},
+			{
+				path: 'complex-table',
+				component: () => import('@/views/pages/user/UserLog'),
+				name: 'ComplexTable',
+				meta: { title: '用户日志' }
+			}
+		]
+	},
 
+	/** 模块化 **/
+	componentsRouter,
 
-  /** when your routing map is too long, you can split it into small modules **/
-  componentsRouter,
-
-  {
-    path: '/pdf/download',
-    component: () => import('@/views/zip/pdf/download'),
-    hidden: true
-  },
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+	// 404 page must be placed at the end !!!
+	{ path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+	// mode: 'history', // require service support
+	scrollBehavior: () => ({ y: 0 }),
+	routes: constantRoutes
 })
 
 const router = createRouter()
 
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter () {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+	const newRouter = createRouter()
+	router.matcher = newRouter.matcher // reset router
 }
 
 export default router
