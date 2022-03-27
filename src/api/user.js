@@ -68,3 +68,22 @@ export function getLogList(params) {
   })
 }
 
+
+/* 发送验证码 */
+export function sendMail(data) {
+  return request({
+    url: '/api/send/email',
+    method: 'POST',
+    data
+  })
+}
+
+/* 验证码登录 */
+export function codeLogin(data) {
+  return request({
+    url: '/api/code/login',
+    method: 'POST',
+    data
+  })
+}
+

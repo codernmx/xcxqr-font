@@ -11,24 +11,33 @@
       </div>
 
       <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input ref="username" v-model="loginForm.username" :placeholder="$t('login.username')" name="username"
-          type="text" tabindex="1" autocomplete="on" />
+        <el-row style="padding-right:5px">
+          <el-col :span="18">
+            <span class="svg-container">
+              <svg-icon icon-class="user" />
+            </span>
+            <el-input ref="username" v-model="loginForm.username" placeholder="请输入邮箱" name="username" type="text"
+              tabindex="1" autocomplete="on" />
+          </el-col>
+          <el-col :span="6" style="margin-top:7px">
+            <el-button type="primary" :disabled="disable" :class="{ codeGeting:isGeting }" @click="getVerCode">
+              {{getCode}}</el-button>
+          </el-col>
+        </el-row>
+
       </el-form-item>
 
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
-        <el-form-item prop="password">
+        <el-form-item>
           <span class="svg-container">
             <svg-icon icon-class="password" />
           </span>
-          <el-input :key="passwordType" ref="password" v-model="loginForm.password" :type="passwordType"
-            :placeholder="$t('login.password')" name="password" tabindex="2" autocomplete="on"
-            @keyup.native="checkCapslock" @blur="capsTooltip = false" @keyup.enter.native="handleLogin" />
-          <span class="show-pwd" @click="showPwd">
+          <el-input :key="passwordType" ref="password" v-model="loginForm.password" placeholder="请输入六位验证码"
+            name="password" tabindex="2" autocomplete="on" @keyup.native="checkCapslock" @blur="capsTooltip = false"
+            @keyup.enter.native="handleLogin" />
+          <!-- <span class="show-pwd" @click="showPwd">
             <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
+          </span> -->
         </el-form-item>
       </el-tooltip>
 
@@ -47,7 +56,7 @@
 
     <el-dialog title="微信扫码登录" :visible.sync="showDialog" align="center" width="30%" @close="wxLoginClose">
       <div>
-        <img :src="qrUrl" alt="小程序码" height="200">
+        <el-image :src="qrUrl" alt="小程序码" height="10%" />
         <div style="margin:15px 0">请使用微信扫描小程序码登录{{ bindTimeout ? '(已超时)' : '' }}</div>
         <!-- (后期考虑是否启用选择性授权) -->
         <!-- <div>
@@ -61,7 +70,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import { getCode, getToken, getUUid } from '@/api/user'
+import { getCode, getToken, getUUid, sendMail, codeLogin } from '@/api/user'
 import { GlobalGetUuidShort } from '@/utils/index'
 
 export default {
@@ -69,8 +78,10 @@ export default {
   components: {},
   data () {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+      let reg = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,5}$/;
+      //       !reg.test(value)
+      if (!reg.test(value)) {
+        callback(new Error('请输入正确邮箱号码'))
       } else {
         callback()
       }
@@ -88,19 +99,22 @@ export default {
       bindTimeout: false,
       timer: null, // 定时器
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       passwordType: 'password',
       capsTooltip: false,
       loading: false,
       showDialog: false,
       redirect: undefined,
-      otherQuery: {}
+      otherQuery: {},
+      getCode: '获取验证码',
+      isGeting: false,
+      count: 60,
+      disable: false
     }
   },
   watch: {
@@ -129,6 +143,25 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
+    //获取验证码
+    getVerCode () {
+      sendMail(this.loginForm).then(res => {
+        console.log(res, 'res')
+      })
+      var countDown = setInterval(() => {
+        if (this.count < 1) {
+          this.isGeting = false
+          this.disable = false
+          this.getCode = '获取验证码'
+          this.count = 6
+          clearInterval(countDown)
+        } else {
+          this.isGeting = true
+          this.disable = true
+          this.getCode = this.count-- + '秒后重发'
+        }
+      }, 1000)
+    },
     //关闭弹窗清除定时器
     wxLoginClose () {
       this.timer && clearTimeout(this.timer)
@@ -138,44 +171,46 @@ export default {
     otherLogin () {
       const _this = this
       this.showDialog = true
-      getToken()
-      const uuid = GlobalGetUuidShort()
-      this.uuid = uuid
-      this.qrUrl = `/api/getCode?useAuth=1&uuid=${uuid}`
-      let counter = 1
-      // 清除定时器重新开启
-      this.timer && clearTimeout(this.timer)
-      this.timer = setInterval(function () {
-        getUUid({ uuid })// 获取openid
-          .then((res) => {
-            counter++
-            if (counter === 60) {
-              clearTimeout(_this.timer)
-              _this.bindTimeout = true
-            }
-            if (res.data.openid !== '') {
-              const { nickname, avatar, openid } = res.data
-              // 存到storage
-              localStorage.setItem('nickname', nickname)
-              localStorage.setItem('avatar', avatar)
-              clearTimeout(_this.timer)
-              _this.showDialog = false
-              _this.loading = true
-              // 登录跳转 (扫码登录)
-              _this.$store.dispatch('user/login', res.data)
-                .then(() => {
-                  _this.$router.push({ path: _this.redirect || '/dashboard', query: _this.otherQuery })
-                  _this.loading = false
-                })
-                .catch(() => {
-                  _this.loading = false
-                })
-            }
-          })
-          .catch((err) => {
-            clearTimeout(this.timer)
-          })
-      }, 3000)
+      getToken().then(tokenRes => { //获取token
+        const uuid = GlobalGetUuidShort()
+        this.uuid = uuid
+        this.qrUrl = `/api/getCode?useAuth=1&uuid=${uuid}`
+        let counter = 1
+        // 清除定时器重新开启
+        this.timer && clearTimeout(this.timer)
+        this.timer = setInterval(function () {
+          getUUid({ uuid })// 获取openid
+            .then((res) => {
+              counter++
+              if (counter === 60) {
+                clearTimeout(_this.timer)
+                _this.bindTimeout = true
+              }
+              if (res.data.openid !== '') {
+                const { nickname, avatar, openid } = res.data
+                // 存到storage
+                localStorage.setItem('nickname', nickname)
+                localStorage.setItem('avatar', avatar)
+                clearTimeout(_this.timer)
+                _this.showDialog = false
+                _this.loading = true
+                // 登录跳转 (扫码登录)
+                _this.$store.dispatch('user/login', res.data)
+                  .then(() => {
+                    _this.$router.push({ path: _this.redirect || '/dashboard', query: _this.otherQuery })
+                    _this.loading = false
+                  })
+                  .catch(() => {
+                    _this.loading = false
+                  })
+              }
+            })
+            .catch((err) => {
+              clearTimeout(this.timer)
+            })
+        }, 3000)
+      })
+
     },
     // 修改选项重新获取qr
     authChange (val) {
@@ -201,7 +236,11 @@ export default {
     handleLogin () {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.$message.warning('开发中，目前仅支持扫码登录')
+          //   this.$message.warning('开发中，目前仅支持扫码登录')
+          codeLogin(this.loginForm).then(res => {
+            console.log(res, 'res')
+            this.$router.push({ path: this.redirect || '/dashboard', query: this.otherQuery })
+          })
           // this.loading = true
           // this.$store.dispatch('user/login', this.loginForm)
           //   .then(() => {
@@ -298,7 +337,10 @@ $cursor: #fff;
 $bg: #2d3a4b;
 $dark_gray: #889aa4;
 $light_gray: #eee;
-
+.codeGeting {
+  background: #cdcdcd;
+  border-color: #cdcdcd;
+}
 .login-container {
   min-height: 100%;
   width: 100%;
