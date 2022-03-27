@@ -88,7 +88,7 @@ export default {
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('密码不能少于6位'))
       } else {
         callback()
       }
@@ -169,56 +169,52 @@ export default {
     },
     // 点击其他方式登录
     otherLogin () {
-      const _this = this
-      this.showDialog = true
-      getToken().then(tokenRes => { //获取token
-        const uuid = GlobalGetUuidShort()
-        this.uuid = uuid
-        this.qrUrl = `/api/getCode?useAuth=1&uuid=${uuid}`
-        let counter = 1
-        // 清除定时器重新开启
-        this.timer && clearTimeout(this.timer)
-        this.timer = setInterval(function () {
-          getUUid({ uuid })// 获取openid
-            .then((res) => {
-              counter++
-              if (counter === 60) {
-                clearTimeout(_this.timer)
-                _this.bindTimeout = true
-              }
-              if (res.data.openid !== '') {
-                const { nickname, avatar, openid } = res.data
-                // 存到storage
-                localStorage.setItem('nickname', nickname)
-                localStorage.setItem('avatar', avatar)
-                clearTimeout(_this.timer)
-                _this.showDialog = false
-                _this.loading = true
-                // 登录跳转 (扫码登录)
-                _this.$store.dispatch('user/login', res.data)
-                  .then(() => {
-                    _this.$router.push({ path: _this.redirect || '/dashboard', query: _this.otherQuery })
-                    _this.loading = false
-                  })
-                  .catch(() => {
-                    _this.loading = false
-                  })
-              }
-            })
-            .catch((err) => {
-              clearTimeout(this.timer)
-            })
-        }, 3000)
+      getToken().then(r => {
+        this.showDialog = true
+        this.getQrUrl()
       })
 
     },
-    // 修改选项重新获取qr
-    authChange (val) {
-      console.log(val)
-      this.$nextTick(function () {
-        this.qrUrl = `/api/getCode?uuid=${this.uuid}` + '&useAuth=' + (val ? 1 : 0)
-      })
+    changeQr () {
+      if (this.bindTimeout) {
+        this.bindTimeout = false
+        this.getQrUrl()
+      } else {
+        this.$notify.warning('请当前二维码过期之后重新获取')
+      }
     },
+    getQrUrl () {
+      let uuid = GlobalGetUuidShort(), counter = 1
+      this.qrUrl = `/api/getCode?useAuth=1&uuid=${uuid}`
+      this.timer && clearTimeout(this.timer)// 清除定时器重新开启
+      this.timer = setInterval(() => {
+        getUUid({ uuid }).then((res) => {// 获取openid
+          counter++
+          if (counter === 31) { //超时
+            clearTimeout(this.timer)
+            this.bindTimeout = true
+          }
+          if (res.data.openid !== '') {
+            clearTimeout(this.timer)
+            this.showDialog = false
+            this.$store.dispatch('user/login', res.data).then(() => {// 登录跳转 (扫码登录)
+              this.$router.push({ path: this.redirect || '/dashboard', query: this.otherQuery })
+            }).catch(err => {
+              console.log(err, 'err')
+            })
+          }
+        }).catch((err) => {
+          clearTimeout(this.timer)
+        })
+      }, 2000)
+    },
+    // 修改选项重新获取qr
+    // authChange (val) {
+    //   console.log(val)
+    //   this.$nextTick(function () {
+    //     this.qrUrl = `/api/getCode?uuid=${this.uuid}` + '&useAuth=' + (val ? 1 : 0)
+    //   })
+    // },
     checkCapslock (e) {
       const { key } = e
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
@@ -347,6 +343,9 @@ $light_gray: #eee;
   background-color: $bg;
   overflow: hidden;
 
+  .mask {
+    opacity: 0.2;
+  }
   .login-form {
     position: relative;
     width: 520px;
