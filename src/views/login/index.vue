@@ -43,7 +43,7 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
         @click.native.prevent="handleLogin">
-        {{ $t('login.logIn') }}
+        登录
       </el-button>
 
       <div style="position:relative">
@@ -201,11 +201,12 @@ export default {
           if (res.data.openid !== '') {
             clearTimeout(this.timer)
             this.showDialog = false
-            this.$store.dispatch('user/login', res.data).then(() => {// 登录跳转 (扫码登录)
-              this.$router.push({ path: this.redirect || '/dashboard', query: this.otherQuery })
-            }).catch(err => {
-              console.log(err, 'err')
-            })
+            this.$notify.success('扫码成功~~ 更多功能开发中~')
+            // this.$store.dispatch('user/login', res.data).then(() => {// 登录跳转 (扫码登录)
+            //   this.$router.push({ path: this.redirect || '/dashboard', query: this.otherQuery })
+            // }).catch(err => {
+            //   console.log(err, 'err')
+            // })
           }
         }).catch((err) => {
           clearTimeout(this.timer)

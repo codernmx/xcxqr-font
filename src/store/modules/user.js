@@ -33,11 +33,11 @@ const actions = {
 	login ({ commit }, userInfo) {
 		console.log(userInfo)
 		if (userInfo.code) { //邮箱登录
-			console.log('进入邮箱登录')
+			console.log('进入邮箱登录',userInfo)
 			return new Promise((resolve, reject) => {
 				commit('SET_TOKEN', userInfo.name)
 				commit('SET_NAME', userInfo.name) //设置昵称
-				commit('SET_AVATAR', userInfo.name) //头像
+				commit('SET_AVATAR', 'https://thirdwx.qlogo.cn/mmopen/vi_32/xCIc7U9YzawpxOjH89Prg1LyQtgicbA8WVPOgMgibU35icXjDrdlzQvq5VicQy3TzxgNh0GdtVibhFCibibZ65E1uOMdw/132') //头像
 				setToken(userInfo.name)
 				resolve()
 			})
@@ -83,7 +83,7 @@ const actions = {
 
 				commit('SET_ROLES', rolesNew)
 				// commit('SET_NAME', name)
-				// commit('SET_AVATAR', avatar)
+				commit('SET_AVATAR', 'https://thirdwx.qlogo.cn/mmopen/vi_32/xCIc7U9YzawpxOjH89Prg1LyQtgicbA8WVPOgMgibU35icXjDrdlzQvq5VicQy3TzxgNh0GdtVibhFCibibZ65E1uOMdw/132')
 				// commit('SET_INTRODUCTION', introduction)
 				resolve(rolesNew)
 			})

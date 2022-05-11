@@ -52,14 +52,6 @@ export function getUserList (params) {
 		params
 	})
 }
-//获取IP列表
-export function getLogList (params) {
-	return request({
-		url: '/api/bjcx/log/list',
-		method: 'get',
-		params
-	})
-}
 
 
 /* 发送验证码 */
@@ -116,4 +108,34 @@ export function delUser (params) {
 	})
 }
 
+
+
+
+
+
+
+/* 日志相关 */
+
+//获取IP列表
+export function getLogList (params) {
+	return request({
+		url: '/api/bjcx/log/list',
+		method: 'get',
+		params
+	})
+}
+
+
+
+/* 附件相关 */
+
+
+//获取附件列表
+export function getFileList (params) {
+	return request({
+		url: '/api/bjcx/file/list',
+		method: 'get',
+		params
+	})
+}
 

@@ -125,7 +125,13 @@ export const asyncRoutes = [
 				component: () => import('@/views/pages/user/UserLog'),
 				name: 'ComplexTable',
 				meta: { title: '用户日志' }
-			}
+			},
+			{
+				path: 'file',
+				component: () => import('@/views/pages/file/User'),
+				name: 'DynamicTable',
+				meta: { title: '附件管理' }
+			},
 		]
 	},
 
