@@ -1,7 +1,13 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on"
-      label-position="left">
+    <el-form
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+      autocomplete="on"
+      label-position="left"
+    >
 
       <div class="title-container">
         <h3 class="title">
@@ -16,12 +22,19 @@
             <span class="svg-container">
               <svg-icon icon-class="user" />
             </span>
-            <el-input ref="username" v-model="loginForm.username" placeholder="请输入邮箱" name="username" type="text"
-              tabindex="1" autocomplete="on" />
+            <el-input
+              ref="username"
+              v-model="loginForm.username"
+              placeholder="请输入邮箱"
+              name="username"
+              type="text"
+              tabindex="1"
+              autocomplete="on"
+            />
           </el-col>
           <el-col :span="6" style="margin-top:7px">
             <el-button type="primary" :disabled="disable" :class="{ codeGeting:isGeting }" @click="getVerCode">
-              {{getCode}}</el-button>
+              {{ getCode }}</el-button>
           </el-col>
         </el-row>
 
@@ -32,17 +45,30 @@
           <span class="svg-container">
             <svg-icon icon-class="password" />
           </span>
-          <el-input :key="passwordType" ref="password" v-model="loginForm.password" placeholder="请输入六位验证码"
-            name="password" tabindex="2" autocomplete="on" @keyup.native="checkCapslock" @blur="capsTooltip = false"
-            @keyup.enter.native="handleLogin" />
+          <el-input
+            :key="passwordType"
+            ref="password"
+            v-model="loginForm.password"
+            placeholder="请输入六位验证码"
+            name="password"
+            tabindex="2"
+            autocomplete="on"
+            @keyup.native="checkCapslock"
+            @blur="capsTooltip = false"
+            @keyup.enter.native="handleLogin"
+          />
           <!-- <span class="show-pwd" @click="showPwd">
             <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
           </span> -->
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
-        @click.native.prevent="handleLogin">
+      <el-button
+        :loading="loading"
+        type="primary"
+        style="width:100%;margin-bottom:30px;"
+        @click.native.prevent="handleLogin"
+      >
         登录
       </el-button>
 
@@ -76,9 +102,9 @@ import { GlobalGetUuidShort } from '@/utils/index'
 export default {
   name: 'Login',
   components: {},
-  data () {
+  data() {
     const validateUsername = (rule, value, callback) => {
-      let reg = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,5}$/;
+      const reg = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,5}$/
       //       !reg.test(value)
       if (!reg.test(value)) {
         callback(new Error('请输入正确邮箱号码'))
@@ -103,7 +129,7 @@ export default {
         password: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        username: [{ required: true, trigger: 'blur', validator: validateUsername }]
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -119,7 +145,7 @@ export default {
   },
   watch: {
     $route: {
-      handler: function (route) {
+      handler: function(route) {
         const query = route.query
         if (query) {
           this.redirect = query.redirect
@@ -129,22 +155,22 @@ export default {
       immediate: true
     }
   },
-  created () {
+  created() {
     // window.addEventListener('storage', this.afterQRScan)
   },
-  mounted () {
+  mounted() {
     if (this.loginForm.username === '') {
       this.$refs.username.focus()
     } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }
   },
-  destroyed () {
+  destroyed() {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
-    //获取验证码
-    getVerCode () {
+    // 获取验证码
+    getVerCode() {
       if (this.loginForm.username) {
         sendMail(this.loginForm).then(res => {
           console.log(res, 'res')
@@ -166,20 +192,19 @@ export default {
         this.$notify.error('请必须输入邮箱号码')
       }
     },
-    //关闭弹窗清除定时器
-    wxLoginClose () {
+    // 关闭弹窗清除定时器
+    wxLoginClose() {
       this.timer && clearTimeout(this.timer)
       this.bindTimeout = false
     },
     // 点击其他方式登录
-    otherLogin () {
+    otherLogin() {
       getToken().then(r => {
         this.showDialog = true
         this.getQrUrl()
       })
-
     },
-    changeQr () {
+    changeQr() {
       if (this.bindTimeout) {
         this.bindTimeout = false
         this.getQrUrl()
@@ -187,14 +212,14 @@ export default {
         this.$notify.warning('请当前二维码过期之后重新获取')
       }
     },
-    getQrUrl () {
-      let uuid = GlobalGetUuidShort(), counter = 1
+    getQrUrl() {
+      const uuid = GlobalGetUuidShort(); let counter = 1
       this.qrUrl = `/api/getCode?useAuth=1&uuid=${uuid}`
       this.timer && clearTimeout(this.timer)// 清除定时器重新开启
       this.timer = setInterval(() => {
-        getUUid({ uuid }).then((res) => {// 获取openid
+        getUUid({ uuid }).then((res) => { // 获取openid
           counter++
-          if (counter === 31) { //超时
+          if (counter === 31) { // 超时
             clearTimeout(this.timer)
             this.bindTimeout = true
           }
@@ -220,11 +245,11 @@ export default {
     //     this.qrUrl = `/api/getCode?uuid=${this.uuid}` + '&useAuth=' + (val ? 1 : 0)
     //   })
     // },
-    checkCapslock (e) {
+    checkCapslock(e) {
       const { key } = e
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
     },
-    showPwd () {
+    showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
       } else {
@@ -234,7 +259,7 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin () {
+    handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -267,7 +292,7 @@ export default {
         }
       })
     },
-    getOtherQuery (query) {
+    getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
         if (cur !== 'redirect') {
           acc[cur] = query[cur]

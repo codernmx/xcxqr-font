@@ -6,8 +6,6 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 
-
-
 /* Router Modules */
 import componentsRouter from './modules/components'
 
@@ -37,65 +35,65 @@ import componentsRouter from './modules/components'
  * all roles can be accessed
  */
 export const constantRoutes = [
-	{
-		path: '/',
-		component: Layout,
-		redirect: '/dashboard',
-		children: [
-			{
-				path: 'dashboard',
-				component: () => import('@/views/dashboard/index'),
-				name: 'Dashboard',
-				meta: { title: 'dashboard', icon: 'dashboard', affix: true }
-			}
-		]
-	},
-	{
-		path: '/redirect',
-		component: Layout,
-		hidden: true,
-		children: [
-			{
-				path: '/redirect/:path(.*)',
-				component: () => import('@/views/zip/redirect/index')
-			}
-		]
-	},
-	{
-		path: '/login',
-		component: () => import('@/views/login/index'),
-		hidden: true
-	},
-	{
-		path: '/auth-redirect',
-		component: () => import('@/views/login/auth-redirect'),
-		hidden: true
-	},
-	{
-		path: '/404',
-		component: () => import('@/views/error-page/404'),
-		hidden: true
-	},
-	{
-		path: '/401',
-		component: () => import('@/views/error-page/401'),
-		hidden: true
-	},
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        name: 'Dashboard',
+        meta: { title: 'dashboard', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/redirect',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/redirect/:path(.*)',
+        component: () => import('@/views/zip/redirect/index')
+      }
+    ]
+  },
+  {
+    path: '/login',
+    component: () => import('@/views/login/index'),
+    hidden: true
+  },
+  {
+    path: '/auth-redirect',
+    component: () => import('@/views/login/auth-redirect'),
+    hidden: true
+  },
+  {
+    path: '/404',
+    component: () => import('@/views/error-page/404'),
+    hidden: true
+  },
+  {
+    path: '/401',
+    component: () => import('@/views/error-page/401'),
+    hidden: true
+  },
 
-	{
-		path: '/profile',
-		component: Layout,
-		redirect: '/profile/index',
-		hidden: true,
-		children: [
-			{
-				path: 'index',
-				component: () => import('@/views/profile/index'),
-				name: 'Profile',
-				meta: { title: 'profile', icon: 'user', noCache: true }
-			}
-		]
-	}
+  {
+    path: '/profile',
+    component: Layout,
+    redirect: '/profile/index',
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/profile/index'),
+        name: 'Profile',
+        meta: { title: 'profile', icon: 'user', noCache: true }
+      }
+    ]
+  }
 ]
 
 /**
@@ -103,56 +101,56 @@ export const constantRoutes = [
  * 需要根据用户角色动态加载的路由
  */
 export const asyncRoutes = [
-	{
-		path: '/user',
-		component: Layout,
-		name: 'User',
-		meta: {
-			title: '用户管理',
-			icon: 'table',
-			roles: ['1']  //超级管理员
+  {
+    path: '/user',
+    component: Layout,
+    name: 'User',
+    meta: {
+      title: '用户管理',
+      icon: 'table',
+      roles: ['1'] // 超级管理员
 
-		},
-		children: [
-			{
-				path: 'dynamic-table',
-				component: () => import('@/views/pages/user/User'),
-				name: 'DynamicTable',
-				meta: { title: '用户列表' }
-			},
-			{
-				path: 'complex-table',
-				component: () => import('@/views/pages/user/UserLog'),
-				name: 'ComplexTable',
-				meta: { title: '用户日志' }
-			},
-			{
-				path: 'file',
-				component: () => import('@/views/pages/file/User'),
-				name: 'DynamicTable',
-				meta: { title: '附件管理' }
-			},
-		]
-	},
+    },
+    children: [
+      {
+        path: 'dynamic-table',
+        component: () => import('@/views/pages/user/User'),
+        name: 'DynamicTable',
+        meta: { title: '用户列表' }
+      },
+      {
+        path: 'complex-table',
+        component: () => import('@/views/pages/user/UserLog'),
+        name: 'ComplexTable',
+        meta: { title: '用户日志' }
+      },
+      {
+        path: 'file',
+        component: () => import('@/views/pages/file/User'),
+        name: 'DynamicTable',
+        meta: { title: '附件管理' }
+      }
+    ]
+  },
 
-	/** 模块化 **/
-	componentsRouter,
+  /** 模块化 **/
+  componentsRouter,
 
-	// 404 page must be placed at the end !!!
-	{ path: '*', redirect: '/404', hidden: true }
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({
-	// mode: 'history', // require service support
-	scrollBehavior: () => ({ y: 0 }),
-	routes: constantRoutes
+  // mode: 'history', // require service support
+  scrollBehavior: () => ({ y: 0 }),
+  routes: constantRoutes
 })
 
 const router = createRouter()
 
-export function resetRouter () {
-	const newRouter = createRouter()
-	router.matcher = newRouter.matcher // reset router
+export function resetRouter() {
+  const newRouter = createRouter()
+  router.matcher = newRouter.matcher // reset router
 }
 
 export default router
