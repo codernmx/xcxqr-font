@@ -127,7 +127,7 @@ export default {
       this.fetchData()
     },
     getImgUrl(row) {
-      return 'http://49.232.153.152:2002/' + row.PATH
+      return 'https://bt.nmxgzs.cn/upload/' + row.PATH
     },
     changePage(e) {
       this.search.pageNum = e

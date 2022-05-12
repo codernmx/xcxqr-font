@@ -193,7 +193,7 @@ const componentsRouter = {
 			meta: { title: 'clipboardDemo' }
 		},
 		{
-			path: 'https://github.com/PanJiaChen/vue-element-admin',
+			path: 'https://github.com/codernmx',
 			meta: { title: 'externalLink' }
 		},
 		{
