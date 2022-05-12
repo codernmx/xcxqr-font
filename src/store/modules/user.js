@@ -34,7 +34,7 @@ const mutations = {
 
 const actions = {
   // user login
-  login ({ commit }, userInfo) {
+  login({ commit }, userInfo) {
     console.log(userInfo)
 
     // if (userInfo.code) { // 邮箱登录
@@ -76,7 +76,7 @@ const actions = {
   },
 
   // get user info
-  getInfo ({ commit, state }) {
+  getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       const userId = sessionStorage.getItem('userId')
       if (userId && userId != undefined) {
@@ -105,7 +105,7 @@ const actions = {
   },
 
   // user logout
-  logout ({ commit, state, dispatch }) {
+  logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
@@ -119,7 +119,7 @@ const actions = {
   },
 
   // remove token
-  resetToken ({ commit }) {
+  resetToken({ commit }) {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
@@ -129,7 +129,7 @@ const actions = {
   },
 
   // dynamically modify permissions
-  async changeRoles ({ commit, dispatch }, role) {
+  async changeRoles({ commit, dispatch }, role) {
     const token = role + '-token'
 
     commit('SET_TOKEN', token)
