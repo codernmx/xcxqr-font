@@ -65,9 +65,9 @@ export function toThousandFilter(num) {
  */
 export function uppercaseFirst(roles) {
   // return string.charAt(0).toUpperCase() + string.slice(1)
-  if (roles.some((item) => item == "1")){
+  if (roles.some((item) => item == '1')) {
     return '超级管理员'
-  }else{
+  } else {
     return '普通用户'
   }
 }

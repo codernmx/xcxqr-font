@@ -34,7 +34,7 @@ const mutations = {
 
 const actions = {
   // user login
-  login ({ commit }, userInfo) {
+  login({ commit }, userInfo) {
     console.log(userInfo)
 
     // if (userInfo.code) { // 邮箱登录
@@ -56,12 +56,12 @@ const actions = {
     //     resolve()
     //   })
     // } else {
-    const { username, token,id } = userInfo
+    const { username, token, id } = userInfo
     return new Promise((resolve, reject) => {
-      sessionStorage.setItem('userId',id )
+      sessionStorage.setItem('userId', id)
       commit('SET_TOKEN', token)
-        setToken(token)
-        resolve()
+      setToken(token)
+      resolve()
 
       // login({ username: username.trim(), password: password }).then(response => {
       //   const { data } = response
@@ -76,13 +76,13 @@ const actions = {
   },
 
   // get user info
-  getInfo ({ commit, state }) {
+  getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       const userId = sessionStorage.getItem('userId')
-      if(userId){
+      if (userId) {
         getRoles({ ID: userId }).then(res => {
-          console.log('进入获取信息',res.data)
-          const {roles,nickName,avatarUrl,EMAIL} = res.data
+          console.log('进入获取信息', res.data)
+          const { roles, nickName, avatarUrl, EMAIL } = res.data
           const rolesNew = []
           roles.forEach(v => {
             rolesNew.push(v.ROLE_ID.toString())
@@ -98,14 +98,14 @@ const actions = {
           // commit('SET_INTRODUCTION', introduction)
           resolve(rolesNew)
         })
-      }else{ //不存在用户
+      } else { // 不存在用户
         reject()
       }
     })
   },
 
   // user logout
-  logout ({ commit, state, dispatch }) {
+  logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
@@ -119,7 +119,7 @@ const actions = {
   },
 
   // remove token
-  resetToken ({ commit }) {
+  resetToken({ commit }) {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
@@ -129,7 +129,7 @@ const actions = {
   },
 
   // dynamically modify permissions
-  async changeRoles ({ commit, dispatch }, role) {
+  async changeRoles({ commit, dispatch }, role) {
     const token = role + '-token'
 
     commit('SET_TOKEN', token)
