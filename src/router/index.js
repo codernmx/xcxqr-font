@@ -107,28 +107,47 @@ export const asyncRoutes = [
     name: 'User',
     meta: {
       title: '用户管理',
-      icon: 'table',
+      icon: 'user',
       roles: ['1'] // 超级管理员
 
     },
     children: [
       {
-        path: 'dynamic-table',
+        path: 'list',
         component: () => import('@/views/pages/user/User'),
-        name: 'DynamicTable',
+        name: 'list',
         meta: { title: '用户列表' }
       },
       {
-        path: 'complex-table',
+        path: 'log',
         component: () => import('@/views/pages/user/UserLog'),
-        name: 'ComplexTable',
+        name: 'log',
         meta: { title: '用户日志' }
-      },
+      }
+    ]
+  },
+  {
+    path: '/sys',
+    component: Layout,
+    name: 'System',
+    meta: {
+      title: '系统管理',
+      icon: 'example',
+      roles: ['1'] // 超级管理员
+
+    },
+    children: [
       {
         path: 'file',
-        component: () => import('@/views/pages/file/User'),
-        name: 'DynamicTable',
+        component: () => import('@/views/pages/system/File'),
+        name: 'File',
         meta: { title: '附件管理' }
+      },
+      {
+        path: 'send',
+        component: () => import('@/views/pages/system/File'),
+        name: 'email',
+        meta: { title: '发送邮件' }
       }
     ]
   },

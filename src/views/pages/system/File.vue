@@ -44,22 +44,37 @@
       <el-table-column prop="avatarUrl" label="图片" width="150" align="center">
         <template v-slot="scope">
           <el-image
-            style="width: 100px; height: 100px"
+            lazy
+            style="width: 75px; height: 75px"
             :src="getImgUrl(scope.row)"
+            :preview-src-list="[getImgUrl(scope.row)]"
           />
         </template>
       </el-table-column>
 
-      <el-table-column prop="avatarUrl" label="地址" width="150" align="center">
+      <el-table-column
+        prop="avatarUrl"
+        label="地址"
+        width="150"
+        align="center"
+        show-overflow-tooltip
+      >
         <template v-slot="scope">
-          <span @click="copy(getUrl(scope.row))">{{
+          <span class="copyUrl" @click="copy('.copyUrl', getUrl(scope.row))">{{
             getUrl(scope.row)
           }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="OLD_NAME" label="原始名称" />
+      <el-table-column prop="SUFFIX" label="文件类型" width="100" />
       <el-table-column prop="FOLDER" label="文件夹" width="150" />
-      <el-table-column prop="NAME" label="文件名" />
+      <el-table-column label="文件名" show-overflow-tooltip>
+        <template v-slot="scope">
+          <span class="copyName" @click="copy('.copyName', scope.row.NAME)">{{
+            scope.row.NAME
+          }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="SIZE" label="文件大小" />
       <el-table-column prop="CREATE_TIME" label="创建时间" />
 
@@ -117,9 +132,14 @@
 </template>
 
 <script>
+import Clipboard from "clipboard";
+
 import { getFileList, addUser, updateUser, delUser } from "@/api/user";
-// import md5 from 'js-md5'
+import { mapGetters } from "vuex";
 export default {
+  components: {
+    Clipboard,
+  },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -148,14 +168,34 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapGetters(["config"]),
+  },
   created() {
     this.fetchData();
     console.log(this.$store.getters.roles);
   },
   methods: {
-    copy(val) {
-      // console.log(val,'val')
+    copy(dom, val) {
+      var clipboard = new Clipboard(dom, {
+        text: function () {
+          return val;
+        },
+      });
+      //复制成功回调
+      clipboard.on("success", () => {
+        this.$notify.success("复制成功");
+        //释放内存
+        clipboard.destroy();
+      });
+      //复制失败回调
+      clipboard.on("error", () => {
+        this.$notify.error("暂不支持复制");
+        //释放内存
+        clipboard.destroy();
+      });
     },
+
     upploadSuccess(response, file, fileList) {
       console.log(response, "response");
       this.$message.success("上传成功");
@@ -163,13 +203,16 @@ export default {
     getImgUrl(row) {
       let suffix = row.NAME.substring(row.NAME.lastIndexOf("."));
       if (suffix == ".jpg" || suffix == ".png" || suffix == ".jpeg") {
-        return "https://bt.nmxgzs.cn/upload/" + row.PATH;
+        return this.config.BASE_URL_FILE + row.PATH;
       } else {
-        return "https://bt.nmxgzs.cn/upload/2022-05-11/c877923f5d4b14bf397c836c3e087f71.webp";
+        return (
+          this.config.BASE_URL_FILE +
+          "2022-05-11/c877923f5d4b14bf397c836c3e087f71.webp"
+        );
       }
     },
     getUrl(row) {
-      return "https://bt.nmxgzs.cn/upload/" + row.PATH;
+      return this.config.BASE_URL_FILE + row.PATH;
     },
     /* 关闭弹窗刷新列表 */
     dialogClose() {
@@ -182,12 +225,7 @@ export default {
     },
     del(id) {
       this.$confirm("是否删除数据", { type: "warning" }).then((res) => {
-        // delUser({ id }).then(res => {
-        //   if (res.code == 200) {
         this.$notify.error("开发中~~");
-        //     this.fetchData()
-        //   }
-        // })
       });
     },
     // 修改

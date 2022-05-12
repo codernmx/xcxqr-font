@@ -123,4 +123,11 @@ export function getFileList(params) {
     params
   })
 }
+/* 获取配置信息 */
+export function getConfigApi() {
+  return request({
+    url: '/api/get/config',
+    method: 'get',
+  })
+}
 
