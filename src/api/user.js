@@ -134,7 +134,7 @@ export function getFileList(params) {
 export function getConfigApi() {
   return request({
     url: '/api/get/config',
-    method: 'get',
+    method: 'get'
   })
 }
 

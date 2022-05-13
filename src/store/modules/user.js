@@ -1,5 +1,5 @@
 import { login, logout, getRoles, getConfigApi } from '@/api/user'
-import { getToken, setToken, removeToken,setUserId,getUserId } from '@/utils/auth'
+import { getToken, setToken, removeToken, setUserId, getUserId } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
 const state = {
@@ -31,14 +31,14 @@ const mutations = {
   SET_EMAIL: (state, email) => {
     state.email = email
   },
-  SET_CONFIG: (state, config) => {/*附件基本路径 */
+  SET_CONFIG: (state, config) => { /* 附件基本路径 */
     state.config = config
   }
 }
 
 const actions = {
   // user login
-  login ({ commit }, userInfo) {
+  login({ commit }, userInfo) {
     console.log(userInfo)
 
     // if (userInfo.code) { // 邮箱登录
@@ -72,7 +72,6 @@ const actions = {
         reject()
       }
 
-
       // login({ username: username.trim(), password: password }).then(response => {
       //   const { data } = response
       //   commit('SET_TOKEN', data.token)
@@ -86,7 +85,7 @@ const actions = {
   },
 
   // get user info
-  getInfo ({ commit, state }) {
+  getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       const userId = getUserId()
       getRoles({ ID: userId }).then(res => {
@@ -113,7 +112,7 @@ const actions = {
       })
     })
   },
-  getConfig ({ commit, state }) {
+  getConfig({ commit, state }) {
     return new Promise((resolve, reject) => {
       getConfigApi().then(res => {
         commit('SET_CONFIG', res.data)
@@ -123,7 +122,7 @@ const actions = {
   },
 
   // user logout
-  logout ({ commit, state, dispatch }) {
+  logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
@@ -137,7 +136,7 @@ const actions = {
   },
 
   // remove token
-  resetToken ({ commit }) {
+  resetToken({ commit }) {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
@@ -147,7 +146,7 @@ const actions = {
   },
 
   // dynamically modify permissions
-  async changeRoles ({ commit, dispatch }, role) {
+  async changeRoles({ commit, dispatch }, role) {
     const token = role + '-token'
 
     commit('SET_TOKEN', token)

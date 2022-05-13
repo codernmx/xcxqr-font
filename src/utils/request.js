@@ -1,26 +1,24 @@
 import axios from 'axios'
-import { MessageBox, Message,Loading } from 'element-ui'
+import { MessageBox, Message, Loading } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
-
 // loading进度条设置
-let globalLoading = null //这里是loading
- 
-function startLoading () {
+let globalLoading = null // 这里是loading
+
+function startLoading() {
   globalLoading = Loading.service({
     lock: true,
-    text: '服务器卖命加载中…',
+    text: '服务器卖命加载中…'
     // background: 'rgba(0, 0, 0, 0.6)'
   })
 }
- 
-function endLoading () {
+
+function endLoading() {
   setTimeout(() => {
     globalLoading.close()
   }, 100)
 }
-
 
 // create an axios instance
 const service = axios.create({
@@ -31,7 +29,7 @@ const service = axios.create({
 
 // request interceptor
 service.interceptors.request.use(
-  
+
   config => {
     startLoading()
     // do something before request is sent
@@ -64,7 +62,7 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    endLoading ()
+    endLoading()
     const res = response.data
     // console.log(res)
 
@@ -80,7 +78,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    endLoading ()
+    endLoading()
     console.log('err' + error) // for debug
     Message({
       message: error.message,

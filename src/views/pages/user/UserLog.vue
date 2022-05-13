@@ -3,62 +3,61 @@
     <el-table
       :data="dataList"
       border
-      style="width: 100%">
+      style="width: 100%"
+    >
       <el-table-column
         prop="ID"
         label="ID"
         width="50"
-      >
-      </el-table-column>
+      />
       <el-table-column
         prop="ACTION"
         label="用户行为"
-      >
-      </el-table-column>
+      />
       <el-table-column
         prop="IP"
         label="IP地址"
-      >
-      </el-table-column>
+      />
       <el-table-column
         prop="ADDRESS"
-        label="归属地">
-      </el-table-column>
+        label="归属地"
+      />
       <el-table-column
         prop="CREATE_TIME"
-        label="创建时间">
-      </el-table-column>
+        label="创建时间"
+      />
       <el-table-column
         width="120"
-        label="操作">
+        label="操作"
+      >
         <template v-slot="scope">
-          <i class="el-icon-edit"></i>
-          <i class="el-icon-delete"></i>
+          <i class="el-icon-edit" />
+          <i class="el-icon-delete" />
         </template>
       </el-table-column>
 
     </el-table>
     <el-pagination
       style="margin: 30px 0"
-      @current-change="changePage"
       background
       layout="total,prev, pager, next"
-      :total="search.total">
-    </el-pagination>
+      :total="search.total"
+      @current-change="changePage"
+    />
   </div>
 </template>
 
 <script>
-import {getLogList} from '@/api/user'
+import { getLogList } from '@/api/user'
 
 export default {
-  name: "UserList",
+  name: 'UserList',
   data() {
     return {
       dataList: [],
       search: {
         pageNum: 1
-      },
+      }
     }
   },
   created() {

@@ -14,7 +14,6 @@ export function removeToken() {
   return Cookies.remove(TokenKey)
 }
 
-
 /* 用户id */
 
 export function getUserId() {
