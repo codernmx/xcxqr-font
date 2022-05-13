@@ -43,6 +43,7 @@
             lazy
             style="width: 75px; height: 75px"
             :src="getImgUrl(scope.row)"
+            fit="scale-down"
             :preview-src-list="[getImgUrl(scope.row)]"
           />
         </template>
