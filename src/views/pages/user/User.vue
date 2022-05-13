@@ -3,26 +3,25 @@
     <div class="search">
       <el-row type="flex" justify="space-between" style="margin:15px 0">
         <el-col :span="4" style="display:flex">
-          <el-input v-model="search.NAME" placeholder="请输入用户名" size="small"></el-input>
-          <el-button type="primary" size="small" style="margin:0 15px" @click="fetchData()">搜索</el-button>
+          <el-input v-model="search.NAME" placeholder="请输入用户名" size="mini"></el-input>
+          <el-button type="primary" size="mini" style="margin:0 15px" @click="fetchData()">搜索</el-button>
         </el-col>
         <el-col :span="1">
-          <el-button type="primary" size="small" icon="el-icon-plus"
+          <el-button type="primary" size="mini" icon="el-icon-plus"
             @click="dialog = true;ruleForm = {NAME: '',PASSWORD: ''};edit = false">添加</el-button>
         </el-col>
 
       </el-row>
 
     </div>
-    <el-table v-loading="listLoading" :data="list" element-loading-text="Loading" border fit highlight-current-row>
-      <el-table-column type="index" label="序号" width="50">
-      </el-table-column>
-      <el-table-column prop="avatarUrl" label="头像" width="80">
+    <el-table :data="list"  border fit highlight-current-row>
+      <el-table-column prop="ID" label="ID" width="50" />
+      <el-table-column prop="AVATAR_URL" label="头像" width="80">
         <template v-slot="scope">
-          <el-avatar :src="scope.row.avatarUrl"></el-avatar>
+          <el-avatar :src="scope.row.AVATAR_URL"></el-avatar>
         </template>
       </el-table-column>
-      <el-table-column prop="nickName" label="用户名">
+      <el-table-column prop="NICK_NAME" label="用户名">
       </el-table-column>
       <el-table-column prop="OPENID" label="OPENID">
       </el-table-column>
@@ -37,7 +36,7 @@
             </el-tooltip>
 
             <el-tooltip class="item" effect="dark" content="删除" placement="top">
-              <i class="el-icon-delete" @click="del(scope.row.id)" style="margin:0 15px"></i>
+              <i class="el-icon-delete" @click="del(scope.row.ID)" style="margin:0 15px"></i>
             </el-tooltip>
 
           </span>
@@ -52,7 +51,7 @@
       <div>
         <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
           <el-form-item label="账户" prop="name">
-            <el-input v-model="ruleForm.nickName"></el-input>
+            <el-input v-model="ruleForm.NICK_NAME"></el-input>
           </el-form-item>
           <!-- <el-form-item label="密码" prop="name">
             <el-input v-model="ruleForm.PASSWORD"></el-input>
@@ -87,16 +86,15 @@ export default {
   data () {
     return {
       ruleForm: {
-        nickName: '',
+        NICK_NAME: '',
         PASSWORD: '',
       },
       list: null,
       dialog: false,
-      listLoading: true,
       edit: false,
       search: {
         pageNum: 1,
-        nickName: '',
+        NICK_NAME: '',
         total: 0,
       }
     }
@@ -110,9 +108,9 @@ export default {
       this.search.pageNum = e
       this.fetchData()
     },
-    del (id) {
+    del (ID) {
       this.$confirm('是否删除数据', { type: 'warning' }).then(res => {
-        delUser({ id }).then(res => {
+        delUser({ ID }).then(res => {
           if (res.code == 200) {
             this.$notify.success(res.msg)
             this.fetchData()
@@ -146,12 +144,10 @@ export default {
       }
     },
     fetchData () {
-      this.listLoading = true
       getUserList(this.search).then(res => {
         console.log(res, 'res')
         this.list = res.data
         this.search.total = res.total
-        this.listLoading = false
       })
     }
   }

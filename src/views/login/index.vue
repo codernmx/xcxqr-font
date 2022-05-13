@@ -118,7 +118,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import { getCode, getToken, getUUid, sendMail, codeLogin } from '@/api/user'
+import { getCode, getToken, getUUid, sendCode, codeLogin } from '@/api/user'
 import { GlobalGetUuidShort } from '@/utils/index'
 
 export default {
@@ -197,7 +197,7 @@ export default {
     // 获取验证码
     getVerCode() {
       if (this.loginForm.username) {
-        sendMail(this.loginForm).then((res) => {
+        sendCode(this.loginForm).then((res) => {
           console.log(res, 'res')
         })
         var countDown = setInterval(() => {

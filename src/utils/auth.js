@@ -13,3 +13,14 @@ export function setToken(token) {
 export function removeToken() {
   return Cookies.remove(TokenKey)
 }
+
+
+/* 用户id */
+
+export function getUserId() {
+  return Cookies.get('userId')
+}
+
+export function setUserId(id) {
+  return Cookies.set('userId', id)
+}

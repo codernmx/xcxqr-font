@@ -145,7 +145,7 @@ export const asyncRoutes = [
       },
       {
         path: 'send',
-        component: () => import('@/views/pages/system/File'),
+        component: () => import('@/views/pages/system/Send'),
         name: 'email',
         meta: { title: '发送邮件' }
       }

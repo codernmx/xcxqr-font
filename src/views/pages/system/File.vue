@@ -6,12 +6,12 @@
           <el-input
             v-model="search.NAME"
             placeholder="请输入原文件名"
-            size="small"
+            size="mini"
             clearable
           />
           <el-button
             type="primary"
-            size="small"
+            size="mini"
             style="margin: 0 15px"
             @click="fetchData()"
             >搜索</el-button
@@ -20,7 +20,7 @@
         <el-col :span="1">
           <el-button
             type="primary"
-            size="small"
+            size="mini"
             icon="el-icon-plus"
             @click="
               dialog = true;
@@ -33,15 +33,13 @@
       </el-row>
     </div>
     <el-table
-      v-loading="listLoading"
       :data="list"
-      element-loading-text="Loading"
       border
       fit
       highlight-current-row
     >
       <el-table-column prop="ID" label="ID" width="50" />
-      <el-table-column prop="avatarUrl" label="图片" width="150" align="center">
+      <el-table-column label="图片" width="150" align="center">
         <template v-slot="scope">
           <el-image
             lazy
@@ -53,7 +51,6 @@
       </el-table-column>
 
       <el-table-column
-        prop="avatarUrl"
         label="地址"
         width="150"
         align="center"
@@ -154,12 +151,11 @@ export default {
     return {
       fileList: [],
       ruleForm: {
-        nickName: "",
+        NICK_NAME: "",
         PASSWORD: "",
       },
       list: null,
       dialog: false,
-      listLoading: true,
       edit: false,
       search: {
         pageNum: 1,
@@ -255,12 +251,10 @@ export default {
       }
     },
     fetchData() {
-      this.listLoading = true;
       getFileList(this.search).then((res) => {
         console.log(res, "res");
         this.list = res.data;
         this.search.total = res.total;
-        this.listLoading = false;
       });
     },
   },

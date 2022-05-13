@@ -1,7 +1,26 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import { MessageBox, Message,Loading } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+
+
+// loading进度条设置
+let globalLoading = null //这里是loading
+ 
+function startLoading () {
+  globalLoading = Loading.service({
+    lock: true,
+    text: '服务器卖命加载中…',
+    // background: 'rgba(0, 0, 0, 0.6)'
+  })
+}
+ 
+function endLoading () {
+  setTimeout(() => {
+    globalLoading.close()
+  }, 100)
+}
+
 
 // create an axios instance
 const service = axios.create({
@@ -12,7 +31,9 @@ const service = axios.create({
 
 // request interceptor
 service.interceptors.request.use(
+  
   config => {
+    startLoading()
     // do something before request is sent
 
     if (store.getters.token) {
@@ -43,13 +64,14 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
+    endLoading ()
     const res = response.data
     // console.log(res)
 
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {
       Message({
-        message: res.msg || 'Error',
+        message: res.msg || '系统内部错误，请联系管理员',
         type: 'error',
         duration: 5 * 1000
       })
@@ -58,6 +80,7 @@ service.interceptors.response.use(
     }
   },
   error => {
+    endLoading ()
     console.log('err' + error) // for debug
     Message({
       message: error.message,

@@ -51,7 +51,7 @@ router.beforeEach(async (to, from, next) => {
           await store.dispatch('user/resetToken')
           Message.error({
             type: 'error ',
-            message: error || '登录过期'
+            message: error || '加载用户信息失败，请重新登录'
           })
           next(`/login?redirect=${to.path}`)
           NProgress.done()

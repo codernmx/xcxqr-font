@@ -1,5 +1,5 @@
 import { login, logout, getRoles, getConfigApi } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken,setUserId,getUserId } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
 const state = {
@@ -8,7 +8,7 @@ const state = {
   avatar: '',
   email: '',
   introduction: '',
-  config:{},
+  config: {},
   roles: []
 }
 
@@ -54,18 +54,24 @@ const actions = {
     // if (userInfo.token) { // 如果扫码登录直接携带了 token
     //   return new Promise((resolve, reject) => {
     //     commit('SET_TOKEN', userInfo.token)
-    //     commit('SET_NAME', userInfo.nickname) // 设置昵称
+    //     commit('SET_NAME', userInfo.NICK_NAME) // 设置昵称
     //     commit('SET_AVATAR', userInfo.avatar) // 头像
     //     setToken(userInfo.token)
     //     resolve()
     //   })
     // } else {
-    const { username, token, id } = userInfo
+    const { token, ID } = userInfo
     return new Promise((resolve, reject) => {
-      sessionStorage.setItem('userId', id)
-      commit('SET_TOKEN', token)
-      setToken(token)
-      resolve()
+      if (ID) {
+        // sessionStorage.setItem('userId', ID)
+        setUserId(ID)
+        commit('SET_TOKEN', token)
+        setToken(token)
+        resolve()
+      } else {
+        reject()
+      }
+
 
       // login({ username: username.trim(), password: password }).then(response => {
       //   const { data } = response
@@ -82,29 +88,29 @@ const actions = {
   // get user info
   getInfo ({ commit, state }) {
     return new Promise((resolve, reject) => {
-      const userId = sessionStorage.getItem('userId')
-      if (userId && userId != undefined) {
-        getRoles({ ID: userId }).then(res => {
+      const userId = getUserId()
+      getRoles({ ID: userId }).then(res => {
+        if (res) {
           console.log('用户信息', res.data)
-          const { roles, nickName, avatarUrl, EMAIL } = res.data
+          const { roles, NICK_NAME, AVATAR_URL, EMAIL } = res.data
           const rolesNew = []
           roles.forEach(v => {
             rolesNew.push(v.ROLE_ID.toString())
           })
           // roles must be a non-empty array
           if (!rolesNew || rolesNew.length <= 0) {
-            reject('getInfo: roles must be a non-null array!')
+            reject('当前用户角色信息为空~')
           }
           commit('SET_ROLES', rolesNew)
-          commit('SET_NAME', nickName)
-          commit('SET_AVATAR', avatarUrl)
+          commit('SET_NAME', NICK_NAME)
+          commit('SET_AVATAR', AVATAR_URL)
           commit('SET_EMAIL', EMAIL)
           // commit('SET_INTRODUCTION', introduction)
           resolve(rolesNew)
-        })
-      } else { // 不存在用户
-        reject()
-      }
+        } else {
+          reject()
+        }
+      })
     })
   },
   getConfig ({ commit, state }) {

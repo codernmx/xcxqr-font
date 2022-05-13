@@ -52,7 +52,14 @@ export function getUserList(params) {
 }
 
 /* 发送验证码 */
-export function sendMail(data) {
+export function sendCode(data) {
+  return request({
+    url: '/api/send/code',
+    method: 'POST',
+    data
+  })
+}
+export function sendEmail(data) {
   return request({
     url: '/api/send/email',
     method: 'POST',

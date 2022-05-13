@@ -17,19 +17,18 @@
       </el-table-column>
       <el-table-column
         prop="IP"
-        label="IP"
+        label="IP地址"
       >
       </el-table-column>
       <el-table-column
         prop="ADDRESS"
-        label="IP解析地址">
+        label="归属地">
       </el-table-column>
       <el-table-column
         prop="CREATE_TIME"
         label="创建时间">
       </el-table-column>
       <el-table-column
-        prop="avatarUrl"
         width="120"
         label="操作">
         <template v-slot="scope">
