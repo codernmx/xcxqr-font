@@ -3,7 +3,7 @@
     <div class="search">
       <el-row type="flex" justify="space-between" style="margin:15px 0">
         <el-col :span="4" style="display:flex">
-          <el-input v-model="search.NAME" placeholder="请输入用户名" size="mini" />
+          <el-input v-model="search.NICK_NAME" placeholder="请输入用户名" size="mini" />
           <el-button type="primary" size="mini" style="margin:0 15px" @click="fetchData()">搜索</el-button>
         </el-col>
         <el-col :span="1">
@@ -11,7 +11,7 @@
             type="primary"
             size="mini"
             icon="el-icon-plus"
-            @click="dialog = true;ruleForm = {NAME: '',PASSWORD: ''};edit = false"
+            @click="dialog = true;ruleForm = {NICK_NAME: '',PASSWORD: ''};edit = false"
           >添加</el-button>
         </el-col>
 
@@ -56,7 +56,7 @@
     <el-dialog title="" :visible.sync="dialog" width="40%">
       <div>
         <el-form ref="ruleForm" :model="ruleForm" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="账户" prop="name">
+          <el-form-item label="用户昵称" prop="name">
             <el-input v-model="ruleForm.NICK_NAME" />
           </el-form-item>
           <!-- <el-form-item label="密码" prop="name">
