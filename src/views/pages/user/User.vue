@@ -1,22 +1,38 @@
 <template>
   <div class="app-container">
     <div class="search">
-      <el-row type="flex" justify="space-between" style="margin:15px 0">
-        <el-col :span="4" style="display:flex">
-          <el-input v-model="search.NICK_NAME" placeholder="请输入用户名" size="mini" />
-          <el-button type="primary" size="mini" style="margin:0 15px" @click="fetchData()">搜索</el-button>
+      <el-row type="flex" justify="space-between" style="margin: 15px 0">
+        <el-col :span="4" style="display: flex">
+          <el-input
+            v-model="search.NICK_NAME"
+            placeholder="请输入用户名"
+            size="mini"
+          />
+          <el-button
+            type="primary"
+            size="mini"
+            style="margin: 0 15px"
+            @click="
+              search.pageNum = 1;
+              fetchData();
+            "
+            >搜索</el-button
+          >
         </el-col>
         <el-col :span="1">
           <el-button
             type="primary"
             size="mini"
             icon="el-icon-plus"
-            @click="dialog = true;ruleForm = {NICK_NAME: '',PASSWORD: ''};edit = false"
-          >添加</el-button>
+            @click="
+              dialog = true;
+              ruleForm = { NICK_NAME: '', PASSWORD: '' };
+              edit = false;
+            "
+            >添加</el-button
+          >
         </el-col>
-
       </el-row>
-
     </div>
     <el-table :data="list" border fit highlight-current-row>
       <el-table-column prop="ID" label="ID" width="50" />
@@ -33,14 +49,27 @@
       <el-table-column label="操作" width="110" align="center">
         <template slot-scope="scope">
           <span class="editBtn">
-            <el-tooltip class="item" effect="dark" content="修改" placement="top">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="修改"
+              placement="top"
+            >
               <i class="el-icon-edit" @click="editItem(scope.row)" />
             </el-tooltip>
 
-            <el-tooltip class="item" effect="dark" content="删除" placement="top">
-              <i class="el-icon-delete" style="margin:0 15px" @click="del(scope.row.ID)" />
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="删除"
+              placement="top"
+            >
+              <i
+                class="el-icon-delete"
+                style="margin: 0 15px"
+                @click="del(scope.row.ID)"
+              />
             </el-tooltip>
-
           </span>
         </template>
       </el-table-column>
@@ -55,7 +84,12 @@
 
     <el-dialog title="" :visible.sync="dialog" width="40%">
       <div>
-        <el-form ref="ruleForm" :model="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form
+          ref="ruleForm"
+          :model="ruleForm"
+          label-width="100px"
+          class="demo-ruleForm"
+        >
           <el-form-item label="用户昵称" prop="name">
             <el-input v-model="ruleForm.NICK_NAME" />
           </el-form-item>
@@ -73,18 +107,18 @@
 </template>
 
 <script>
-import { getUserList, addUser, updateUser, delUser } from '@/api/user'
+import { getUserList, addUser, updateUser, delUser } from "@/api/user";
 // import md5 from 'js-md5'
 export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
+        published: "success",
+        draft: "gray",
+        deleted: "danger",
+      };
+      return statusMap[status];
+    },
     //     md5 (val) {
     //       return md5(val)
     //     }
@@ -92,72 +126,73 @@ export default {
   data() {
     return {
       ruleForm: {
-        NICK_NAME: '',
-        PASSWORD: ''
+        NICK_NAME: "",
+        PASSWORD: "",
       },
       list: null,
       dialog: false,
       edit: false,
       search: {
         pageNum: 1,
-        NICK_NAME: '',
-        total: 0
-      }
-    }
+        NICK_NAME: "",
+        total: 0,
+      },
+    };
   },
   created() {
-    this.fetchData()
-    console.log(this.$store.getters.roles)
+    this.fetchData();
+    console.log(this.$store.getters.roles);
   },
   methods: {
     changePage(e) {
-      this.search.pageNum = e
-      this.fetchData()
+      this.search.pageNum = e;
+      this.fetchData();
     },
     del(ID) {
-      this.$confirm('是否删除数据', { type: 'warning' }).then(res => {
-        delUser({ ID }).then(res => {
+      this.$confirm("是否删除数据", { type: "warning" }).then((res) => {
+        delUser({ ID }).then((res) => {
           if (res.code == 200) {
-            this.$notify.success(res.msg)
-            this.fetchData()
+            this.$notify.success(res.msg);
+            this.fetchData();
           }
-        })
-      })
+        });
+      });
     },
     // 修改
     editItem(row) {
-      this.dialog = true
-      this.ruleForm = JSON.parse(JSON.stringify(row))
-      this.edit = true
+      this.dialog = true;
+      this.ruleForm = JSON.parse(JSON.stringify(row));
+      this.edit = true;
     },
     addSubmit() {
-      if (this.edit) { // 修改
-        updateUser(this.ruleForm).then(res => {
+      if (this.edit) {
+        // 修改
+        updateUser(this.ruleForm).then((res) => {
           if (res.code == 200) {
-            this.$notify.success(res.msg)
-            this.dialog = false
-            this.fetchData()
+            this.$notify.success(res.msg);
+            this.dialog = false;
+            this.fetchData();
           }
-        })
+        });
       } else {
-        addUser(this.ruleForm).then(res => {
+        addUser(this.ruleForm).then((res) => {
           if (res.code == 200) {
-            this.$notify.success(res.msg)
-            this.dialog = false
-            this.fetchData()
+            this.$notify.success(res.msg);
+            this.dialog = false;
+            this.fetchData();
           }
-        })
+        });
       }
     },
     fetchData() {
-      getUserList(this.search).then(res => {
-        console.log(res, 'res')
-        this.list = res.data
-        this.search.total = res.total
-      })
-    }
-  }
-}
+      getUserList(this.search).then((res) => {
+        console.log(res, "res");
+        this.list = res.data;
+        this.search.total = res.total;
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

@@ -13,7 +13,10 @@
             type="primary"
             size="mini"
             style="margin: 0 15px"
-            @click="fetchData()"
+            @click="
+              search.pageNum = 1;
+              fetchData();
+            "
             >搜索</el-button
           >
         </el-col>
