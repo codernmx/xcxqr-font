@@ -84,13 +84,21 @@
             <el-tooltip
               class="item"
               effect="dark"
+              content="修改"
+              placement="top"
+            >
+              <i class="el-icon-edit" @click="editItem(scope.row)" />
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              effect="dark"
               content="删除"
               placement="top"
             >
               <i
                 class="el-icon-delete"
                 style="margin: 0 15px"
-                @click="del(scope.row.id)"
+                @click="del(scope.row.ID)"
               />
             </el-tooltip>
           </span>
@@ -128,13 +136,19 @@
         </el-upload>
       </div>
     </el-dialog>
+    <el-dialog title="修改文件名" :visible.sync="editDialog" width="40%" center>
+      <el-input v-model="edit.OLD_NAME" placeholder="请输入文件名"></el-input>
+      <span slot="footer">
+        <el-button type="primary" @click="addSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import Clipboard from "clipboard";
 
-import { getFileList, addUser, updateUser, delUser } from "@/api/user";
+import { getFileList, fileUpadte, delFile } from "@/api/user";
 import { mapGetters } from "vuex";
 export default {
   components: {
@@ -158,7 +172,9 @@ export default {
         PASSWORD: "",
       },
       list: null,
+      edit: {},
       dialog: false,
+      editDialog: false,
       edit: false,
       search: {
         pageNum: 1,
@@ -204,10 +220,7 @@ export default {
       if (suffix == ".jpg" || suffix == ".png" || suffix == ".jpeg") {
         return this.config.BASE_URL_FILE + row.PATH;
       } else {
-        return (
-          this.config.BASE_URL_FILE +
-          "2022-05-11/c877923f5d4b14bf397c836c3e087f71.webp"
-        );
+        return this.config.BASE_URL_FILE + "2022-05-25/K4mjLf.png";
       }
     },
     getUrl(row) {
@@ -222,36 +235,31 @@ export default {
       this.search.pageNum = e;
       this.fetchData();
     },
-    del(id) {
-      this.$confirm("是否删除数据", { type: "warning" }).then((res) => {
-        this.$notify.error("开发中~~");
+    del(ID) {
+      this.$confirm("是否删除数据", { type: "warning" }).then(() => {
+        delFile({ ID }).then((res) => {
+          if (res.code == 200) {
+            this.$notify.success("删除成功~~");
+            this.fetchData();
+          }
+        });
       });
     },
     // 修改
     editItem(row) {
-      this.dialog = true;
-      this.ruleForm = JSON.parse(JSON.stringify(row));
-      this.edit = true;
+      this.editDialog = true;
+      this.edit = JSON.parse(JSON.stringify(row));
     },
     addSubmit() {
-      if (this.edit) {
-        // 修改
-        updateUser(this.ruleForm).then((res) => {
-          if (res.code == 200) {
-            this.$notify.success(res.msg);
-            this.dialog = false;
-            this.fetchData();
-          }
-        });
-      } else {
-        addUser(this.ruleForm).then((res) => {
-          if (res.code == 200) {
-            this.$notify.success(res.msg);
-            this.dialog = false;
-            this.fetchData();
-          }
-        });
-      }
+      fileUpadte({
+        ID: this.edit.ID,
+        OLD_NAME: this.edit.OLD_NAME,
+      }).then((res) => {
+        if (res.code == 200) {
+          this.editDialog = false;
+          this.fetchData();
+        }
+      });
     },
     fetchData() {
       getFileList(this.search).then((res) => {
