@@ -8,7 +8,7 @@
       <el-table-column
         prop="ID"
         label="ID"
-        width="50"
+        width="100"
       />
       <el-table-column
         prop="ACTION"
