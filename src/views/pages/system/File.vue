@@ -36,7 +36,7 @@
       </el-row>
     </div>
     <el-table :data="list" border fit highlight-current-row>
-      <el-table-column prop="ID" label="ID" width="50" />
+      <el-table-column prop="ID" label="ID" width="100" />
       <el-table-column label="图片" width="150" align="center">
         <template v-slot="scope">
           <el-image
