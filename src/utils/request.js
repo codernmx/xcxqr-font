@@ -1,12 +1,13 @@
 import axios from 'axios'
 import { MessageBox, Message, Loading } from 'element-ui'
+import { baseURL } from '@/config/index'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
 // loading进度条设置
 let globalLoading = null // 这里是loading
 
-function startLoading() {
+function startLoading () {
   globalLoading = Loading.service({
     lock: true,
     text: '服务器卖命加载中…'
@@ -14,7 +15,7 @@ function startLoading() {
   })
 }
 
-function endLoading() {
+function endLoading () {
   setTimeout(() => {
     globalLoading.close()
   }, 100)
@@ -22,9 +23,10 @@ function endLoading() {
 
 // create an axios instance
 const service = axios.create({
+  // baseURL,
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url  (添加一段请求接口)
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  timeout: 30000 // request timeout  超时时间30秒
 })
 
 // request interceptor

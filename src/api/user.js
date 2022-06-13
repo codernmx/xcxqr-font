@@ -1,19 +1,5 @@
 import request from '@/utils/request'
 
-export function login (data) {
-  return request({
-    url: '/vue-element-admin/user/login',
-    method: 'post',
-    data
-  })
-}
-
-export function logout () {
-  return request({
-    url: '/vue-element-admin/user/logout',
-    method: 'post'
-  })
-}
 
 // 获取二维码
 export function getCode (params) {
@@ -37,15 +23,6 @@ export function getToken (params) {
 export function getUUid (params) {
   return request({
     url: '/api/uuid',
-    method: 'get',
-    params
-  })
-}
-
-// 获取用户列表
-export function getUserList (params) {
-  return request({
-    url: '/api/bjcx/user/list',
     method: 'get',
     params
   })
@@ -75,7 +52,7 @@ export function codeLogin (data) {
     data
   })
 }
-/* 获取角色 */
+/* 获取用户的所有角色信息 */
 export function getRoles (params) {
   return request({
     url: '/api/get/user/info',
@@ -83,7 +60,28 @@ export function getRoles (params) {
     params
   })
 }
+/* 获取配置信息 */
+export function getConfigApi () {
+  return request({
+    url: '/api/get/config',
+    method: 'get'
+  })
+}
 
+
+
+/* ----------------------用户相关---------------- */
+/* ----------------------用户相关---------------- */
+/* ----------------------用户相关---------------- */
+
+// 获取用户列表
+export function getUserList (params) {
+  return request({
+    url: '/api/bjcx/user/list',
+    method: 'get',
+    params
+  })
+}
 // 添加 用户
 export function addUser (data) {
   return request({
@@ -109,7 +107,47 @@ export function delUser (params) {
   })
 }
 
-/* 日志相关 */
+/* ----------------------角色相关---------------- */
+/* ----------------------角色相关---------------- */
+/* ----------------------角色相关---------------- */
+
+// 获取用户列表
+export function getRoleList (params) {
+  return request({
+    url: '/api/bjcx/role/list',
+    method: 'get',
+    params
+  })
+}
+// 添加 用户
+export function addRole (data) {
+  return request({
+    url: '/api/bjcx/role/insert',
+    method: 'POST',
+    data
+  })
+}
+// 修改 用户
+export function updateRole (data) {
+  return request({
+    url: '/api/bjcx/role/update',
+    method: 'POST',
+    data
+  })
+}
+// 删除 用户
+export function delRole (params) {
+  return request({
+    url: '/api/bjcx/role/delete',
+    method: 'get',
+    params
+  })
+}
+
+
+/* ----------------------日志相关---------------- */
+/* ----------------------日志相关---------------- */
+/* ----------------------日志相关---------------- */
 
 // 获取IP列表
 export function getLogList (params) {
@@ -120,7 +158,9 @@ export function getLogList (params) {
   })
 }
 
-/* 附件相关 */
+/* ----------------------附件相关---------------- */
+/* ----------------------附件相关---------------- */
+/* ----------------------附件相关---------------- */
 
 // 获取附件列表
 export function getFileList (params) {
@@ -144,13 +184,6 @@ export function fileUpadte (data) {
     url: '/api/bjcx/file/update',
     method: 'post',
     data
-  })
-}
-/* 获取配置信息 */
-export function getConfigApi () {
-  return request({
-    url: '/api/get/config',
-    method: 'get'
   })
 }
 

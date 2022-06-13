@@ -4,9 +4,9 @@
       <el-row type="flex" justify="space-between" style="margin: 15px 0">
         <el-col :span="4" style="display: flex">
           <el-input
-            v-model="search.NICK_NAME"
+            v-model="search.NAME"
+            placeholder="请输入角色名称"
             clearable
-            placeholder="请输入用户名"
             size="mini"
           />
           <el-button
@@ -29,16 +29,9 @@
     </div>
     <el-table :data="list" border fit highlight-current-row>
       <el-table-column prop="ID" label="ID" width="100" align="center" />
-      <el-table-column prop="AVATAR_URL" label="头像" width="80">
-        <template v-slot="scope">
-          <el-avatar :src="scope.row.AVATAR_URL" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="NICK_NAME" label="用户名" />
-      <el-table-column prop="OPENID" label="OPENID" />
-      <el-table-column prop="EMAIL" label="邮箱" />
+      <el-table-column prop="NAME" label="角色名称" />
+      <el-table-column prop="REMARKS" label="角色描述" />
       <el-table-column prop="CREATE_TIME" label="创建时间" />
-      <el-table-column prop="UPDATE_TIME" label="登录时间" />
       <el-table-column label="操作" width="110" align="center">
         <template slot-scope="scope">
           <span class="editBtn">
@@ -81,24 +74,11 @@
           label-width="100px"
           class="demo-ruleForm"
         >
-          <el-form-item label="用户昵称" prop="name">
-            <el-input v-model="ruleForm.NICK_NAME" />
+          <el-form-item label="角色名称" prop="NAME">
+            <el-input v-model="ruleForm.NAME" />
           </el-form-item>
-
-          <el-form-item label="角色信息">
-            <el-select
-              style="width: 100%"
-              v-model="ruleForm.ROLE"
-              placeholder="请选择角色"
-              multiple
-            >
-              <el-option
-                v-for="item in roleList"
-                :key="item.id"
-                :label="item.NAME"
-                :value="item.ID"
-              ></el-option>
-            </el-select>
+          <el-form-item label="角色描述" prop="REMARKS">
+            <el-input v-model="ruleForm.REMARKS" />
           </el-form-item>
         </el-form>
       </div>
@@ -111,14 +91,9 @@
 </template>
 
 <script>
-import {
-  getUserList,
-  addUser,
-  updateUser,
-  delUser,
-  getRoleList,
-} from "@/api/user";
+import { getRoleList, addRole, updateRole, delRole } from "@/api/user";
 export default {
+  name: "Role",
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -131,18 +106,17 @@ export default {
   },
   data() {
     return {
-      ruleForm: {
-        NICK_NAME: "",
-        PASSWORD: "",
-      },
       title: "",
-      list: [],
-      roleList: [],
+      ruleForm: {
+        NAME: "",
+        REMARKS: "",
+      },
+      list: null,
       dialog: false,
       edit: false,
       search: {
         pageNum: 1,
-        NICK_NAME: "",
+        NAME: "",
         total: 0,
       },
     };
@@ -150,25 +124,15 @@ export default {
   created() {
     this.fetchData();
     console.log(this.$store.getters.roles);
-    this.getRoleList();
   },
   methods: {
-    getRoleList() {
-      getRoleList({
-        pageNum: 1,
-        pageSize: 100,
-        NAME: "",
-      }).then((res) => {
-        this.roleList = res.data;
-      });
-    },
     changePage(e) {
       this.search.pageNum = e;
       this.fetchData();
     },
     del(ID) {
       this.$confirm("是否删除数据", { type: "warning" }).then((res) => {
-        delUser({ ID }).then((res) => {
+        delRole({ ID }).then((res) => {
           if (res.code == 200) {
             this.$notify.success(res.msg);
             this.fetchData();
@@ -178,21 +142,21 @@ export default {
     },
     add() {
       this.dialog = true;
-      this.ruleForm = { NICK_NAME: "", PASSWORD: "" };
+      this.ruleForm = { NAME: "", REMARKS: "" };
       this.edit = false;
-      this.title = "新增用户";
+      this.title = "新增角色";
     },
     // 修改
     editItem(row) {
       this.dialog = true;
+      this.title = "编辑角色";
       this.ruleForm = JSON.parse(JSON.stringify(row));
       this.edit = true;
-      this.title = "编辑用户";
     },
     addSubmit() {
       if (this.edit) {
         // 修改
-        updateUser(this.ruleForm).then((res) => {
+        updateRole(this.ruleForm).then((res) => {
           if (res.code == 200) {
             this.$notify.success(res.msg);
             this.dialog = false;
@@ -200,7 +164,7 @@ export default {
           }
         });
       } else {
-        addUser(this.ruleForm).then((res) => {
+        addRole(this.ruleForm).then((res) => {
           if (res.code == 200) {
             this.$notify.success(res.msg);
             this.dialog = false;
@@ -210,7 +174,7 @@ export default {
       }
     },
     fetchData() {
-      getUserList(this.search).then((res) => {
+      getRoleList(this.search).then((res) => {
         console.log(res, "res");
         this.list = res.data;
         this.search.total = res.total;
