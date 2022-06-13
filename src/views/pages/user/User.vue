@@ -17,13 +17,15 @@
               search.pageNum = 1;
               fetchData();
             "
-            >搜索</el-button
-          >
+          >搜索</el-button>
         </el-col>
         <el-col :span="1">
-          <el-button type="primary" size="mini" icon="el-icon-plus" @click="add"
-            >添加</el-button
-          >
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            @click="add"
+          >添加</el-button>
         </el-col>
       </el-row>
     </div>
@@ -87,8 +89,8 @@
 
           <el-form-item label="角色信息">
             <el-select
-              style="width: 100%"
               v-model="ruleForm.ROLE"
+              style="width: 100%"
               placeholder="请选择角色"
               multiple
             >
@@ -97,7 +99,7 @@
                 :key="item.id"
                 :label="item.NAME"
                 :value="item.ID"
-              ></el-option>
+              />
             </el-select>
           </el-form-item>
         </el-form>
@@ -116,108 +118,108 @@ import {
   addUser,
   updateUser,
   delUser,
-  getRoleList,
-} from "@/api/user";
+  getRoleList
+} from '@/api/user'
 export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: "success",
-        draft: "gray",
-        deleted: "danger",
-      };
-      return statusMap[status];
-    },
+        published: 'success',
+        draft: 'gray',
+        deleted: 'danger'
+      }
+      return statusMap[status]
+    }
   },
   data() {
     return {
       ruleForm: {
-        NICK_NAME: "",
-        PASSWORD: "",
+        NICK_NAME: '',
+        PASSWORD: ''
       },
-      title: "",
+      title: '',
       list: [],
       roleList: [],
       dialog: false,
       edit: false,
       search: {
         pageNum: 1,
-        NICK_NAME: "",
-        total: 0,
-      },
-    };
+        NICK_NAME: '',
+        total: 0
+      }
+    }
   },
   created() {
-    this.fetchData();
-    console.log(this.$store.getters.roles);
-    this.getRoleList();
+    this.fetchData()
+    console.log(this.$store.getters.roles)
+    this.getRoleList()
   },
   methods: {
     getRoleList() {
       getRoleList({
         pageNum: 1,
         pageSize: 100,
-        NAME: "",
+        NAME: ''
       }).then((res) => {
-        this.roleList = res.data;
-      });
+        this.roleList = res.data
+      })
     },
     changePage(e) {
-      this.search.pageNum = e;
-      this.fetchData();
+      this.search.pageNum = e
+      this.fetchData()
     },
     del(ID) {
-      this.$confirm("是否删除数据", { type: "warning" }).then((res) => {
+      this.$confirm('是否删除数据', { type: 'warning' }).then((res) => {
         delUser({ ID }).then((res) => {
           if (res.code == 200) {
-            this.$notify.success(res.msg);
-            this.fetchData();
+            this.$notify.success(res.msg)
+            this.fetchData()
           }
-        });
-      });
+        })
+      })
     },
     add() {
-      this.dialog = true;
-      this.ruleForm = { NICK_NAME: "", PASSWORD: "" };
-      this.edit = false;
-      this.title = "新增用户";
+      this.dialog = true
+      this.ruleForm = { NICK_NAME: '', PASSWORD: '' }
+      this.edit = false
+      this.title = '新增用户'
     },
     // 修改
     editItem(row) {
-      this.dialog = true;
-      this.ruleForm = JSON.parse(JSON.stringify(row));
-      this.edit = true;
-      this.title = "编辑用户";
+      this.dialog = true
+      this.ruleForm = JSON.parse(JSON.stringify(row))
+      this.edit = true
+      this.title = '编辑用户'
     },
     addSubmit() {
       if (this.edit) {
         // 修改
         updateUser(this.ruleForm).then((res) => {
           if (res.code == 200) {
-            this.$notify.success(res.msg);
-            this.dialog = false;
-            this.fetchData();
+            this.$notify.success(res.msg)
+            this.dialog = false
+            this.fetchData()
           }
-        });
+        })
       } else {
         addUser(this.ruleForm).then((res) => {
           if (res.code == 200) {
-            this.$notify.success(res.msg);
-            this.dialog = false;
-            this.fetchData();
+            this.$notify.success(res.msg)
+            this.dialog = false
+            this.fetchData()
           }
-        });
+        })
       }
     },
     fetchData() {
       getUserList(this.search).then((res) => {
-        console.log(res, "res");
-        this.list = res.data;
-        this.search.total = res.total;
-      });
-    },
-  },
-};
+        console.log(res, 'res')
+        this.list = res.data
+        this.search.total = res.total
+      })
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 .app-container {

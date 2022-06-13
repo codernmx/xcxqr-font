@@ -7,7 +7,7 @@ import { getToken } from '@/utils/auth'
 // loading进度条设置
 let globalLoading = null // 这里是loading
 
-function startLoading () {
+function startLoading() {
   globalLoading = Loading.service({
     lock: true,
     text: '服务器卖命加载中…'
@@ -15,7 +15,7 @@ function startLoading () {
   })
 }
 
-function endLoading () {
+function endLoading() {
   setTimeout(() => {
     globalLoading.close()
   }, 100)

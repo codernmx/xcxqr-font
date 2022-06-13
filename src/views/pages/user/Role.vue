@@ -17,13 +17,15 @@
               search.pageNum = 1;
               fetchData();
             "
-            >搜索</el-button
-          >
+          >搜索</el-button>
         </el-col>
         <el-col :span="1">
-          <el-button type="primary" size="mini" icon="el-icon-plus" @click="add"
-            >添加</el-button
-          >
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            @click="add"
+          >添加</el-button>
         </el-col>
       </el-row>
     </div>
@@ -91,97 +93,97 @@
 </template>
 
 <script>
-import { getRoleList, addRole, updateRole, delRole } from "@/api/user";
+import { getRoleList, addRole, updateRole, delRole } from '@/api/user'
 export default {
-  name: "Role",
+  name: 'Role',
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: "success",
-        draft: "gray",
-        deleted: "danger",
-      };
-      return statusMap[status];
-    },
+        published: 'success',
+        draft: 'gray',
+        deleted: 'danger'
+      }
+      return statusMap[status]
+    }
   },
   data() {
     return {
-      title: "",
+      title: '',
       ruleForm: {
-        NAME: "",
-        REMARKS: "",
+        NAME: '',
+        REMARKS: ''
       },
       list: null,
       dialog: false,
       edit: false,
       search: {
         pageNum: 1,
-        NAME: "",
-        total: 0,
-      },
-    };
+        NAME: '',
+        total: 0
+      }
+    }
   },
   created() {
-    this.fetchData();
-    console.log(this.$store.getters.roles);
+    this.fetchData()
+    console.log(this.$store.getters.roles)
   },
   methods: {
     changePage(e) {
-      this.search.pageNum = e;
-      this.fetchData();
+      this.search.pageNum = e
+      this.fetchData()
     },
     del(ID) {
-      this.$confirm("是否删除数据", { type: "warning" }).then((res) => {
+      this.$confirm('是否删除数据', { type: 'warning' }).then((res) => {
         delRole({ ID }).then((res) => {
           if (res.code == 200) {
-            this.$notify.success(res.msg);
-            this.fetchData();
+            this.$notify.success(res.msg)
+            this.fetchData()
           }
-        });
-      });
+        })
+      })
     },
     add() {
-      this.dialog = true;
-      this.ruleForm = { NAME: "", REMARKS: "" };
-      this.edit = false;
-      this.title = "新增角色";
+      this.dialog = true
+      this.ruleForm = { NAME: '', REMARKS: '' }
+      this.edit = false
+      this.title = '新增角色'
     },
     // 修改
     editItem(row) {
-      this.dialog = true;
-      this.title = "编辑角色";
-      this.ruleForm = JSON.parse(JSON.stringify(row));
-      this.edit = true;
+      this.dialog = true
+      this.title = '编辑角色'
+      this.ruleForm = JSON.parse(JSON.stringify(row))
+      this.edit = true
     },
     addSubmit() {
       if (this.edit) {
         // 修改
         updateRole(this.ruleForm).then((res) => {
           if (res.code == 200) {
-            this.$notify.success(res.msg);
-            this.dialog = false;
-            this.fetchData();
+            this.$notify.success(res.msg)
+            this.dialog = false
+            this.fetchData()
           }
-        });
+        })
       } else {
         addRole(this.ruleForm).then((res) => {
           if (res.code == 200) {
-            this.$notify.success(res.msg);
-            this.dialog = false;
-            this.fetchData();
+            this.$notify.success(res.msg)
+            this.dialog = false
+            this.fetchData()
           }
-        });
+        })
       }
     },
     fetchData() {
       getRoleList(this.search).then((res) => {
-        console.log(res, "res");
-        this.list = res.data;
-        this.search.total = res.total;
-      });
-    },
-  },
-};
+        console.log(res, 'res')
+        this.list = res.data
+        this.search.total = res.total
+      })
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 .app-container {

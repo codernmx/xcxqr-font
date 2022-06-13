@@ -9,9 +9,11 @@
             placeholder="请输入"
             size="mini"
           />
-          <el-button type="primary" size="mini" style="margin: 0 15px"
-            >搜索</el-button
-          >
+          <el-button
+            type="primary"
+            size="mini"
+            style="margin: 0 15px"
+          >搜索</el-button>
         </el-col>
       </el-row>
     </div>
@@ -61,35 +63,35 @@
 </template>
 
 <script>
-import { getLogList } from "@/api/user";
+import { getLogList } from '@/api/user'
 
 export default {
-  name: "UserList",
+  name: 'UserList',
   data() {
     return {
       dataList: [],
       search: {
-        pageNum: 1,
-      },
-    };
+        pageNum: 1
+      }
+    }
   },
   created() {
-    this.getDataList(this.search);
+    this.getDataList(this.search)
   },
   methods: {
     changePage(e) {
-      this.search.pageNum = e;
-      this.getDataList(this.search);
+      this.search.pageNum = e
+      this.getDataList(this.search)
     },
     getDataList(params) {
       getLogList(params).then((res) => {
-        console.log(res);
-        this.dataList = res.data;
-        this.search.total = res.total;
-      });
-    },
-  },
-};
+        console.log(res)
+        this.dataList = res.data
+        this.search.total = res.total
+      })
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
