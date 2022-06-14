@@ -79,6 +79,15 @@ export function getUserList(params) {
     params
   })
 }
+/* 获取用户下角色信息 */
+export function getUserRoleById(params) {
+  return request({
+    url: '/api/bjcx/user/detail',
+    method: 'get',
+    params
+  })
+}
+
 // 添加 用户
 export function addUser(data) {
   return request({
