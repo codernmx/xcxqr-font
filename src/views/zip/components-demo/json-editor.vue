@@ -1,10 +1,6 @@
 <template>
   <div class="components-container">
-    <aside>Json-Editor is base on <a href="https://github.com/codemirror/CodeMirror" target="_blank">CodeMirrorr</a>. Lint
-      base on <a
-        href="https://github.com/codemirror/CodeMirror/blob/master/addon/lint/json-lint.js"
-        target="_blank"
-      >json-lint</a>.</aside>
+    <aside>公用模板：</aside>
     <div class="editor-container">
       <json-editor ref="jsonEditor" v-model="value" />
     </div>
@@ -14,7 +10,8 @@
 <script>
 import JsonEditor from '@/components/JsonEditor'
 
-const jsonData = '[{"items":[{"market_type":"forexdata","symbol":"XAUUSD"},{"market_type":"forexdata","symbol":"UKOIL"},{"market_type":"forexdata","symbol":"CORN"}],"name":""},{"items":[{"market_type":"forexdata","symbol":"XAUUSD"},{"market_type":"forexdata","symbol":"XAGUSD"},{"market_type":"forexdata","symbol":"AUTD"},{"market_type":"forexdata","symbol":"AGTD"}],"name":"贵金属"},{"items":[{"market_type":"forexdata","symbol":"CORN"},{"market_type":"forexdata","symbol":"WHEAT"},{"market_type":"forexdata","symbol":"SOYBEAN"},{"market_type":"forexdata","symbol":"SUGAR"}],"name":"农产品"},{"items":[{"market_type":"forexdata","symbol":"UKOIL"},{"market_type":"forexdata","symbol":"USOIL"},{"market_type":"forexdata","symbol":"NGAS"}],"name":"能源化工"}]'
+const jsonData =
+  '{"touser":"OPEN_ID","template_id":"QWcqPsYlMUwNpZUF3Ru1W1XkK0MHN_cWU6RhEemtVNM","miniprogram":{"appid":"wx95465a816219bd5a","pagepath":"/pages/index/index"},"data":{"first":{"value":"您的爱车【{}】今天在【成都】限行,请合理安排出行方式,避免罚款!"},"keyword1":{"value":"CAR_NUMBER","color":"#FF0101"},"keyword2":{"value":"REASON"},"remark":{"value":"宝!每天快乐开车鸭~~~","color":"#007BF9"}}}'
 
 export default {
   name: 'JsonEditorDemo',
@@ -23,14 +20,42 @@ export default {
     return {
       value: JSON.parse(jsonData)
     }
+  },
+  created() {
+    const json = JSON.stringify({
+      touser: 'OPEN_ID',
+      template_id: 'QWcqPsYlMUwNpZUF3Ru1W1XkK0MHN_cWU6RhEemtVNM',
+      miniprogram: {
+        appid: 'wx95465a816219bd5a',
+        pagepath: '/pages/index/index'
+      },
+      data: {
+        first: {
+          value:
+            '您的爱车【{}】今天在【成都】限行,请合理安排出行方式,避免罚款!'
+        },
+        keyword1: {
+          value: 'CAR_NUMBER',
+          color: '#FF0101'
+        },
+        keyword2: {
+          value: 'REASON'
+        },
+        remark: {
+          value: '宝!每天快乐开车鸭~~~',
+          color: '#007BF9'
+        }
+      }
+    })
+
+    console.log(json, 'json')
   }
 }
 </script>
 
 <style scoped>
-.editor-container{
+.editor-container {
   position: relative;
   height: 100%;
 }
 </style>
-
