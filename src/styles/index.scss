@@ -189,3 +189,9 @@ aside {
 .multiselect--active {
   z-index: 1000 !important;
 }
+
+/* 表头颜色 */
+
+.el-table .el-table__header tr th {
+  background-color: #E7F5FF;
+}
