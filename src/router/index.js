@@ -157,6 +157,31 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/gzh',
+    component: Layout,
+    name: 'Gzh',
+    meta: {
+      title: '公众号管理',
+      icon: 'example',
+      roles: ['1','5'] // 公众号管理员 + 超级管理员
+
+    },
+    children: [
+      {
+        path: 'city',
+        component: () => import('@/views/pages/gzh/City'),
+        name: 'City',
+        meta: { title: '城市管理' }
+      },
+      {
+        path: 'notice',
+        component: () => import('@/views/pages/gzh/City'),
+        name: 'Notice',
+        meta: { title: '发送通知' }
+      },
+    ]
+  },
 
   /** 模块化 **/
   componentsRouter,
