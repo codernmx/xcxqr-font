@@ -39,4 +39,12 @@ export function cityDel(params) {
     params
   })
 }
+/* 发送通知 */
+export function sendNotice(data) {
+  return request({
+    url: '/api/gzh/notice/send',
+    method: 'post',
+    data
+  })
+}
 

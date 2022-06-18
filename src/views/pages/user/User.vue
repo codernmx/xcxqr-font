@@ -47,7 +47,23 @@
       </el-table-column>
       <!-- <el-table-column prop="EMAIL" label="邮箱" /> -->
       <el-table-column prop="CREATE_TIME" label="创建时间" />
-      <el-table-column prop="UPDATE_TIME" label="登录时间" />
+      <el-table-column label="是否启用" width="100" align="center">
+        <template v-slot="scope">
+          <el-switch
+            v-model="scope.row.STATUS"
+            :inactive-value="1"
+            :active-value="0"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            @change="
+              (val) => {
+                changeStatus(val, scope.row.ID);
+              }
+            "
+          >
+          </el-switch>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="110" align="center">
         <template slot-scope="scope">
           <span class="editBtn">
@@ -126,6 +142,7 @@ import {
   getUserList,
   addUser,
   updateUser,
+  updateUserStatus,
   delUser,
   getRoleList,
   getUserRoleById,
@@ -166,6 +183,15 @@ export default {
     this.getRoleList();
   },
   methods: {
+    changeStatus(STATUS, ID) {
+      console.log(STATUS, ID);
+      updateUserStatus({ ID, STATUS }).then((res) => {
+        if (res.code == 200) {
+          this.$notify.success(res.msg);
+          this.fetchData();
+        }
+      });
+    },
     getRoleList() {
       getRoleList({
         pageNum: 1,

@@ -176,7 +176,7 @@ export const asyncRoutes = [
       },
       {
         path: 'notice',
-        component: () => import('@/views/pages/gzh/City'),
+        component: () => import('@/views/pages/gzh/Notice'),
         name: 'Notice',
         meta: { title: '发送通知' }
       },

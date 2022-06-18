@@ -23,7 +23,7 @@
             <el-input
               ref="username"
               v-model="loginForm.username"
-              style="width:50%"
+              style="width: 50%"
               placeholder="请输入邮箱"
               name="username"
               type="text"
@@ -38,7 +38,8 @@
               :class="{ codeGeting: isGeting }"
               @click="getVerCode"
             >
-              {{ getCode }}</el-button>
+              {{ getCode }}</el-button
+            >
           </el-col>
         </el-row>
       </el-form-item>
@@ -92,7 +93,7 @@
             title="小程序登录"
             alt="小程序登录"
             @click="otherLogin"
-          >
+          />
         </div>
       </div>
     </el-form>
@@ -120,77 +121,78 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
-import { getCode, getToken, getUUid, sendCode, codeLogin } from '@/api/user'
-import { GlobalGetUuidShort } from '@/utils/index'
+import { validUsername } from "@/utils/validate";
+import { baseURL } from "@/config/index";
+import { getCode, getToken, getUUid, sendCode, codeLogin } from "@/api/user";
+import { GlobalGetUuidShort } from "@/utils/index";
 
 export default {
-  name: 'Login',
+  name: "Login",
   components: {},
   data() {
     const validateUsername = (rule, value, callback) => {
       const reg =
-        /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,5}$/
+        /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,5}$/;
       //       !reg.test(value)
       if (!reg.test(value)) {
-        callback(new Error('请输入正确邮箱号码'))
+        callback(new Error("请输入正确邮箱号码"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('密码不能少于6位'))
+        callback(new Error("密码不能少于6位"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
-      qrUrl: '',
+      qrUrl: "",
       auth: true,
       bindTimeout: false,
       timer: null, // 定时器
       loginForm: {
-        username: '',
-        password: ''
+        username: "",
+        password: "",
       },
       loginRules: {
         username: [
-          { required: true, trigger: 'blur', validator: validateUsername }
-        ]
+          { required: true, trigger: "blur", validator: validateUsername },
+        ],
       },
-      passwordType: 'password',
+      passwordType: "password",
       capsTooltip: false,
       loading: false,
       showDialog: false,
       redirect: undefined,
       otherQuery: {},
-      getCode: '获取验证码',
+      getCode: "获取验证码",
       isGeting: false,
       count: 60,
-      disable: false
-    }
+      disable: false,
+    };
   },
   watch: {
     $route: {
-      handler: function(route) {
-        const query = route.query
+      handler: function (route) {
+        const query = route.query;
         if (query) {
-          this.redirect = query.redirect
-          this.otherQuery = this.getOtherQuery(query)
+          this.redirect = query.redirect;
+          this.otherQuery = this.getOtherQuery(query);
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   created() {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
-    if (this.loginForm.username === '') {
-      this.$refs.username.focus()
-    } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
+    if (this.loginForm.username === "") {
+      this.$refs.username.focus();
+    } else if (this.loginForm.password === "") {
+      this.$refs.password.focus();
     }
   },
   destroyed() {
@@ -201,64 +203,65 @@ export default {
     getVerCode() {
       if (this.loginForm.username) {
         sendCode(this.loginForm).then((res) => {
-          console.log(res, 'res')
-        })
+          console.log(res, "res");
+        });
         var countDown = setInterval(() => {
           if (this.count < 1) {
-            this.isGeting = false
-            this.disable = false
-            this.getCode = '获取验证码'
-            this.count = 60
-            clearInterval(countDown)
+            this.isGeting = false;
+            this.disable = false;
+            this.getCode = "获取验证码";
+            this.count = 60;
+            clearInterval(countDown);
           } else {
-            this.isGeting = true
-            this.disable = true
-            this.getCode = this.count-- + '秒后重发'
+            this.isGeting = true;
+            this.disable = true;
+            this.getCode = this.count-- + "秒后重发";
           }
-        }, 1000)
+        }, 1000);
       } else {
-        this.$notify.error('请必须输入邮箱号码')
+        this.$notify.error("请必须输入邮箱号码");
       }
     },
     // 关闭弹窗清除定时器
     wxLoginClose() {
-      this.timer && clearTimeout(this.timer)
-      this.bindTimeout = false
+      this.timer && clearTimeout(this.timer);
+      this.bindTimeout = false;
     },
     // 点击其他方式登录
     otherLogin() {
-      getToken().then((r) => {
-        this.showDialog = true
-        this.getQrUrl()
-      })
+      this.getQrUrl();
+      this.showDialog = true;
+      // getToken().then((r) => {
+
+      // })
     },
     changeQr() {
       if (this.bindTimeout) {
-        this.bindTimeout = false
-        this.getQrUrl()
+        this.bindTimeout = false;
+        this.getQrUrl();
       } else {
-        this.$notify.warning('请当前二维码过期之后重新获取')
+        this.$notify.warning("请当前二维码过期之后重新获取");
       }
     },
     getQrUrl() {
-      const uuid = GlobalGetUuidShort()
-      let counter = 1
-      this.qrUrl = `/api/getCode?useAuth=1&uuid=${uuid}`
-      this.timer && clearTimeout(this.timer) // 清除定时器重新开启
+      const uuid = GlobalGetUuidShort();
+      let counter = 1;
+      this.qrUrl = `${baseURL}/api/getCode?useAuth=1&uuid=${uuid}`;
+      this.timer && clearTimeout(this.timer); // 清除定时器重新开启
       this.timer = setInterval(() => {
         getUUid({ uuid })
           .then((res) => {
             // 获取openid
-            counter++
+            counter++;
             if (counter === 31) {
               // 超时
-              clearTimeout(this.timer)
-              this.bindTimeout = true
+              clearTimeout(this.timer);
+              this.bindTimeout = true;
             }
-            if (res.data.openid !== '') {
-              clearTimeout(this.timer)
-              this.showDialog = false
-              this.$notify.success('扫码成功~~ 更多功能开发中~')
+            if (res.data.openid !== "") {
+              clearTimeout(this.timer);
+              this.showDialog = false;
+              this.$notify.error("登录请使用邮箱，小程序扫码仅做展示~~");
               // this.$store.dispatch('user/login', res.data).then(() => {// 登录跳转 (扫码登录)
               //   this.$router.push({ path: this.redirect || '/dashboard', query: this.otherQuery })
               // }).catch(err => {
@@ -267,9 +270,9 @@ export default {
             }
           })
           .catch((err) => {
-            clearTimeout(this.timer)
-          })
-      }, 2000)
+            clearTimeout(this.timer);
+          });
+      }, 2000);
     },
     // 修改选项重新获取qr
     // authChange (val) {
@@ -279,41 +282,41 @@ export default {
     //   })
     // },
     checkCapslock(e) {
-      const { key } = e
-      this.capsTooltip = key && key.length === 1 && key >= 'A' && key <= 'Z'
+      const { key } = e;
+      this.capsTooltip = key && key.length === 1 && key >= "A" && key <= "Z";
     },
     showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
+      if (this.passwordType === "password") {
+        this.passwordType = "";
       } else {
-        this.passwordType = 'password'
+        this.passwordType = "password";
       }
       this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
+        this.$refs.password.focus();
+      });
     },
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           //   this.$message.warning('开发中，目前仅支持扫码登录')
           codeLogin(this.loginForm).then((res) => {
-            console.log(res, 'res')
-            this.loading = false
+            console.log(res, "res");
+            this.loading = false;
             this.$store
-              .dispatch('user/login', res.data)
+              .dispatch("user/login", res.data)
               .then(() => {
-                console.log(55, '55')
+                console.log(55, "55");
                 this.$router.push({
-                  path: this.redirect || '/dashboard',
-                  query: this.otherQuery
-                })
+                  path: this.redirect || "/dashboard",
+                  query: this.otherQuery,
+                });
               })
               .catch(() => {
-                this.loading = false
-              })
+                this.loading = false;
+              });
             //     this.$router.push({ path: this.redirect || '/dashboard', query: this.otherQuery })
-          })
+          });
           // this.loading = true
           // this.$store.dispatch('user/login', this.loginForm)
           //   .then(() => {
@@ -324,19 +327,19 @@ export default {
           //     this.loading = false
           //   })
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== 'redirect') {
-          acc[cur] = query[cur]
+        if (cur !== "redirect") {
+          acc[cur] = query[cur];
         }
-        return acc
-      }, {})
-    }
+        return acc;
+      }, {});
+    },
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
     //     const code = getQueryObject(e.newValue)
@@ -355,8 +358,8 @@ export default {
     //     }
     //   }
     // }
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss">

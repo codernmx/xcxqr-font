@@ -104,6 +104,14 @@ export function updateUser(data) {
     data
   })
 }
+/* 修改用户状态 */
+export function updateUserStatus(data) {
+  return request({
+    url: '/api/bjcx/user/updateStatus',
+    method: 'POST',
+    data
+  })
+}
 // 删除 用户
 export function delUser(params) {
   return request({
