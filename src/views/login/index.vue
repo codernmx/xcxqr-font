@@ -12,18 +12,17 @@
         <h3 class="title">
           {{ $t("login.title") }}
         </h3>
-        <!-- <lang-select class="set-language" /> -->
       </div>
       <el-form-item prop="username">
-        <el-row style="padding-right: 5px">
-          <el-col :span="18">
+        <el-row style="padding-right: 10px" type="flex" justify="start">
+          <el-col :span="16" style="display: flex">
             <span class="svg-container">
               <svg-icon icon-class="user" />
             </span>
             <el-input
               ref="username"
               v-model="loginForm.username"
-              style="width: 50%"
+              style="width: 100%"
               placeholder="请输入邮箱"
               name="username"
               type="text"
@@ -31,9 +30,10 @@
               autocomplete="on"
             />
           </el-col>
-          <el-col :span="6" style="margin-top: 7px">
+          <el-col :span="8" style="margin-top: 7px; text-align: right">
             <el-button
               type="primary"
+              size="mini"
               :disabled="disable"
               :class="{ codeGeting: isGeting }"
               @click="getVerCode"

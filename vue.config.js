@@ -6,7 +6,7 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || 'vue Element Admin' // page title
+const name = defaultSettings.title // page title
 
 // If your port is set to 80,
 // use administrator privileges to execute the command line.
@@ -33,8 +33,8 @@ module.exports = {
     port: 10000,
     proxy: {
       '/api/': {
-        target: 'http://127.0.0.1:2002', //本地',
-        // target: 'http://49.232.153.152:2002', //本地',
+        // target: 'http://127.0.0.1:2002', //本地',
+        target: 'http://49.232.153.152:2002', //本地',
         changeOrigin: true, //是否跨域
         pathRewrite: {
           '^/api/': '/api/'

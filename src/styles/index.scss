@@ -199,3 +199,15 @@ aside {
 .top{
   margin-top: 15px;
 }
+
+
+@media screen and (min-width: 220px) and (max-width:600px) {
+  .el-dialog{
+    width: 90% !important;
+  }
+}
+@media screen and (max-width:220px) {
+  .el-dialog{
+    display: none;
+  }
+}

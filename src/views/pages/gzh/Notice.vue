@@ -3,9 +3,7 @@
     <el-card>
       <json-editor ref="jsonEditor" v-model="value" />
       <el-row type="flex" justify="center">
-        <el-button type="primary" class="top" @click="send"
-          >发送单个</el-button
-        >
+        <el-button type="primary" class="top" @click="send">发送单个</el-button>
         <el-button type="primary" class="top" @click="sendAll"
           >批量发送</el-button
         >
@@ -62,9 +60,9 @@ export default {
 
   methods: {
     async send() {
-      console.log(this.value);
+      const value = this.value;
       const { code, msg, data } = await sendNotice({
-        params: JSON.stringify(this.value),
+        params: typeof value == "object" ? value : JSON.parse(value),
       });
       if (code == 200) {
         this.$notify.success(msg);
