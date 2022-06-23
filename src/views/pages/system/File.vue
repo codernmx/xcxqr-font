@@ -122,17 +122,20 @@
     >
       <div>
         <el-upload
-          class="upload-demo"
           action="/api/upload/file"
           :file-list="fileList"
           list-type="picture"
+          drag
           multiple
           :on-success="upploadSuccess"
+          style="width: 100%"
         >
-          <el-button size="small" type="primary">点击上传</el-button>
+          <!-- <el-button size="small" type="primary">点击上传</el-button>
           <div slot="tip" class="el-upload__tip">
             上传之后可以以原文件名检索
-          </div>
+          </div> -->
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         </el-upload>
       </div>
     </el-dialog>
@@ -276,6 +279,14 @@ export default {
 .app-container {
   .editBtn {
     font-size: 18px;
+  }
+  ::v-deep {
+    .el-upload {
+      display: block;
+    }
+    .el-upload-dragger {
+      width: 100%;
+    }
   }
 }
 </style>

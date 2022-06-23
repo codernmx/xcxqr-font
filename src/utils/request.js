@@ -43,7 +43,7 @@ service.interceptors.request.use(
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
+      config.headers['token'] = getToken()
     }
     return config
   },
@@ -69,15 +69,19 @@ service.interceptors.response.use(
   response => {
     endLoading()
     const res = response.data
-    // console.log(res)
 
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {
+      if (res.code == 403) {
+        /* token过期回到login */
+        location.reload()
+      }
       Message({
         message: res.msg || '系统内部错误，请联系管理员',
         type: 'error',
         duration: 5 * 1000
       })
+
     } else {
       return res
     }
