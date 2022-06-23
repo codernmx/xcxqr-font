@@ -17,8 +17,7 @@
               search.pageNum = 1;
               fetchData();
             "
-            >搜索</el-button
-          >
+          >搜索</el-button>
         </el-col>
         <el-col :span="1">
           <el-button
@@ -30,8 +29,7 @@
               fileList = [];
               edit = false;
             "
-            >添加</el-button
-          >
+          >添加</el-button>
         </el-col>
       </el-row>
     </div>
@@ -134,13 +132,13 @@
           <div slot="tip" class="el-upload__tip">
             上传之后可以以原文件名检索
           </div> -->
-          <i class="el-icon-upload"></i>
+          <i class="el-icon-upload" />
           <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         </el-upload>
       </div>
     </el-dialog>
     <el-dialog title="修改文件名" :visible.sync="editDialog" width="40%" center>
-      <el-input v-model="edit.OLD_NAME" placeholder="请输入文件名"></el-input>
+      <el-input v-model="edit.OLD_NAME" placeholder="请输入文件名" />
       <span slot="footer">
         <el-button type="primary" @click="addSubmit">确 定</el-button>
       </span>
@@ -149,30 +147,30 @@
 </template>
 
 <script>
-import Clipboard from "clipboard";
+import Clipboard from 'clipboard'
 
-import { getFileList, fileUpadte, delFile } from "@/api/user";
-import { mapGetters } from "vuex";
+import { getFileList, fileUpadte, delFile } from '@/api/user'
+import { mapGetters } from 'vuex'
 export default {
   components: {
-    Clipboard,
+    Clipboard
   },
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: "success",
-        draft: "gray",
-        deleted: "danger",
-      };
-      return statusMap[status];
-    },
+        published: 'success',
+        draft: 'gray',
+        deleted: 'danger'
+      }
+      return statusMap[status]
+    }
   },
   data() {
     return {
       fileList: [],
       ruleForm: {
-        NICK_NAME: "",
-        PASSWORD: "",
+        NICK_NAME: '',
+        PASSWORD: ''
       },
       list: null,
       edit: {},
@@ -181,98 +179,98 @@ export default {
       edit: false,
       search: {
         pageNum: 1,
-        NAME: "",
-        total: 0,
-      },
-    };
+        NAME: '',
+        total: 0
+      }
+    }
   },
   computed: {
-    ...mapGetters(["config"]),
+    ...mapGetters(['config'])
   },
   created() {
-    this.fetchData();
-    console.log(this.$store.getters.roles);
+    this.fetchData()
+    console.log(this.$store.getters.roles)
   },
   methods: {
     copy(dom, val) {
       var clipboard = new Clipboard(dom, {
-        text: function () {
-          return val;
-        },
-      });
+        text: function() {
+          return val
+        }
+      })
       // 复制成功回调
-      clipboard.on("success", () => {
-        this.$notify.success("复制成功");
+      clipboard.on('success', () => {
+        this.$notify.success('复制成功')
         // 释放内存
-        clipboard.destroy();
-      });
+        clipboard.destroy()
+      })
       // 复制失败回调
-      clipboard.on("error", () => {
-        this.$notify.error("暂不支持复制");
+      clipboard.on('error', () => {
+        this.$notify.error('暂不支持复制')
         // 释放内存
-        clipboard.destroy();
-      });
+        clipboard.destroy()
+      })
     },
 
     upploadSuccess(response, file, fileList) {
-      console.log(response, "response");
-      this.$message.success("上传成功");
+      console.log(response, 'response')
+      this.$message.success('上传成功')
     },
     getImgUrl(row) {
-      const suffix = row.NAME.substring(row.NAME.lastIndexOf("."));
-      if (suffix == ".jpg" || suffix == ".png" || suffix == ".jpeg") {
-        return this.config.BASE_URL_FILE + row.PATH;
+      const suffix = row.NAME.substring(row.NAME.lastIndexOf('.'))
+      if (suffix == '.jpg' || suffix == '.png' || suffix == '.jpeg') {
+        return this.config.BASE_URL_FILE + row.PATH
       } else {
-        return this.config.BASE_URL_FILE + "2022-05-25/K4mjLf.png";
+        return this.config.BASE_URL_FILE + '2022-05-25/K4mjLf.png'
       }
     },
     getUrl(row) {
-      return this.config.BASE_URL_FILE + row.PATH;
+      return this.config.BASE_URL_FILE + row.PATH
     },
     /* 关闭弹窗刷新列表 */
     dialogClose() {
-      this.dialog = false;
-      this.fetchData();
+      this.dialog = false
+      this.fetchData()
     },
     changePage(e) {
-      this.search.pageNum = e;
-      this.fetchData();
+      this.search.pageNum = e
+      this.fetchData()
     },
     del(ID) {
-      this.$confirm("是否删除数据", { type: "warning" }).then(() => {
+      this.$confirm('是否删除数据', { type: 'warning' }).then(() => {
         delFile({ ID }).then((res) => {
           if (res.code == 200) {
-            this.$notify.success("删除成功~~");
-            this.fetchData();
+            this.$notify.success('删除成功~~')
+            this.fetchData()
           }
-        });
-      });
+        })
+      })
     },
     // 修改
     editItem(row) {
-      this.editDialog = true;
-      this.edit = JSON.parse(JSON.stringify(row));
+      this.editDialog = true
+      this.edit = JSON.parse(JSON.stringify(row))
     },
     addSubmit() {
       fileUpadte({
         ID: this.edit.ID,
-        OLD_NAME: this.edit.OLD_NAME,
+        OLD_NAME: this.edit.OLD_NAME
       }).then((res) => {
         if (res.code == 200) {
-          this.editDialog = false;
-          this.fetchData();
+          this.editDialog = false
+          this.fetchData()
         }
-      });
+      })
     },
     fetchData() {
       getFileList(this.search).then((res) => {
-        console.log(res, "res");
-        this.list = res.data;
-        this.search.total = res.total;
-      });
-    },
-  },
-};
+        console.log(res, 'res')
+        this.list = res.data
+        this.search.total = res.total
+      })
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

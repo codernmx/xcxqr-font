@@ -7,7 +7,7 @@ import { getToken } from '@/utils/auth'
 // loading进度条设置
 let globalLoading = null // 这里是loading
 
-function startLoading () {
+function startLoading() {
   globalLoading = Loading.service({
     lock: true,
     text: '服务器卖命加载中…'
@@ -15,7 +15,7 @@ function startLoading () {
   })
 }
 
-function endLoading () {
+function endLoading() {
   setTimeout(() => {
     globalLoading.close()
   }, 100)
@@ -34,7 +34,7 @@ service.interceptors.request.use(
 
   config => {
     if (config.url != '/api/uuid') {
-      startLoading()  //避免轮训的时候存在加载动画
+      startLoading() // 避免轮训的时候存在加载动画
     }
 
     // do something before request is sent
@@ -81,7 +81,6 @@ service.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
-
     } else {
       return res
     }
