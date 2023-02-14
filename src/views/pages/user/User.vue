@@ -3,27 +3,12 @@
     <div class="search">
       <el-row type="flex" justify="space-between" style="margin: 15px 0">
         <el-col :span="4" style="display: flex">
-          <el-input
-            v-model="search.NICK_NAME"
-            clearable
-            placeholder="请输入用户名"
-            size="mini"
-          />
-          <el-button
-            type="primary"
-            size="mini"
-            style="margin: 0 15px"
-            @click="
-              search.pageNum = 1;
-              fetchData();
-            "
-            >搜索</el-button
-          >
+          <el-input v-model="search.NICK_NAME" clearable placeholder="请输入用户名" size="mini" />
+          <el-button type="primary" size="mini" style="margin: 0 15px" @click=" search.pageNum = 1; fetchData();">搜索
+          </el-button>
         </el-col>
         <el-col :span="1">
-          <el-button type="primary" size="mini" icon="el-icon-plus" @click="add"
-            >添加</el-button
-          >
+          <el-button type="primary" size="mini" icon="el-icon-plus" @click="add">添加</el-button>
         </el-col>
       </el-row>
     </div>
@@ -49,63 +34,29 @@
       <el-table-column prop="CREATE_TIME" label="创建时间" />
       <el-table-column label="是否启用" width="100" align="center">
         <template v-slot="scope">
-          <el-switch
-            v-model="scope.row.STATUS"
-            :inactive-value="1"
-            :active-value="0"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            @change="
-              (val) => {
-                changeStatus(val, scope.row.ID);
-              }
-            "
-          >
+          <el-switch v-model="scope.row.STATUS" :inactive-value="1" :active-value="0" active-color="#13ce66"
+            inactive-color="#ff4949" @change="(val) => {changeStatus(val, scope.row.ID);}">
           </el-switch>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="110" align="center">
         <template slot-scope="scope">
           <span class="editBtn">
-            <el-tooltip
-              class="item"
-              effect="dark"
-              content="修改"
-              placement="top"
-            >
+            <el-tooltip class="item" effect="dark" content="修改" placement="top">
               <i class="el-icon-edit" @click="editItem(scope.row)" />
             </el-tooltip>
-            <el-tooltip
-              class="item"
-              effect="dark"
-              content="删除"
-              placement="top"
-            >
-              <i
-                class="el-icon-delete"
-                style="margin: 0 15px"
-                @click="del(scope.row.ID)"
-              />
+            <el-tooltip class="item" effect="dark" content="删除" placement="top">
+              <i class="el-icon-delete" style="margin: 0 15px" @click="del(scope.row.ID)" />
             </el-tooltip>
           </span>
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      style="margin: 30px 0"
-      background
-      layout="total,prev, pager, next"
-      :total="search.total"
-      @current-change="changePage"
-    />
+    <el-pagination style="margin: 30px 0" background layout="total,prev, pager, next" :total="search.total"
+      @current-change="changePage" />
     <el-dialog :title="title" :visible.sync="dialog" width="40%" center>
       <div>
-        <el-form
-          ref="ruleForm"
-          :model="ruleForm"
-          label-width="100px"
-          class="demo-ruleForm"
-        >
+        <el-form ref="ruleForm" :model="ruleForm" label-width="100px" class="demo-ruleForm">
           <el-form-item label="用户昵称" prop="NICK_NAME">
             <el-input v-model="ruleForm.NICK_NAME" />
           </el-form-item>
@@ -113,18 +64,8 @@
             <el-input v-model="ruleForm.EMAIL" />
           </el-form-item>
           <el-form-item label="角色信息" v-if="edit">
-            <el-select
-              v-model="ruleForm.ROLE"
-              style="width: 100%"
-              placeholder="请选择角色"
-              multiple
-            >
-              <el-option
-                v-for="item in roleList"
-                :key="item.id"
-                :label="item.NAME"
-                :value="item.ID"
-              />
+            <el-select v-model="ruleForm.ROLE" style="width: 100%" placeholder="请选择角色" multiple>
+              <el-option v-for="item in roleList" :key="item.id" :label="item.NAME" :value="item.ID" />
             </el-select>
           </el-form-item>
         </el-form>
@@ -149,7 +90,7 @@ import {
 } from "@/api/user";
 export default {
   filters: {
-    statusFilter(status) {
+    statusFilter (status) {
       const statusMap = {
         published: "success",
         draft: "gray",
@@ -158,7 +99,7 @@ export default {
       return statusMap[status];
     },
   },
-  data() {
+  data () {
     return {
       ruleForm: {
         NICK_NAME: "",
@@ -177,13 +118,13 @@ export default {
       },
     };
   },
-  created() {
+  created () {
     this.fetchData();
     console.log(this.$store.getters.roles);
     this.getRoleList();
   },
   methods: {
-    changeStatus(STATUS, ID) {
+    changeStatus (STATUS, ID) {
       console.log(STATUS, ID);
       updateUserStatus({ ID, STATUS }).then((res) => {
         if (res.code == 200) {
@@ -192,7 +133,7 @@ export default {
         }
       });
     },
-    getRoleList() {
+    getRoleList () {
       getRoleList({
         pageNum: 1,
         pageSize: 100,
@@ -201,11 +142,11 @@ export default {
         this.roleList = res.data;
       });
     },
-    changePage(e) {
+    changePage (e) {
       this.search.pageNum = e;
       this.fetchData();
     },
-    del(ID) {
+    del (ID) {
       this.$confirm("是否删除数据", { type: "warning" }).then((res) => {
         delUser({ ID }).then((res) => {
           if (res.code == 200) {
@@ -215,14 +156,14 @@ export default {
         });
       });
     },
-    add() {
+    add () {
       this.dialog = true;
       this.ruleForm = { NICK_NAME: "", PASSWORD: "" };
       this.edit = false;
       this.title = "新增用户";
     },
     // 修改
-    async editItem(row) {
+    async editItem (row) {
       this.dialog = true;
       this.edit = true;
       this.title = "编辑用户";
@@ -232,7 +173,7 @@ export default {
         ROLE: data.role,
       };
     },
-    addSubmit() {
+    addSubmit () {
       if (this.edit) {
         // 修改
         updateUser(this.ruleForm).then((res) => {
@@ -252,7 +193,7 @@ export default {
         });
       }
     },
-    fetchData() {
+    fetchData () {
       getUserList(this.search).then((res) => {
         console.log(res, "res");
         this.list = res.data;

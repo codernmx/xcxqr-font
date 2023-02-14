@@ -3,27 +3,13 @@
     <div class="search">
       <el-row type="flex" justify="space-between" style="margin: 15px 0">
         <el-col :span="4" style="display: flex">
-          <el-input
-            v-model="search.NICK_NAME"
-            clearable
-            placeholder="请输入"
-            size="mini"
-          />
-          <el-button
-            type="primary"
-            size="mini"
-            style="margin: 0 15px"
-          >搜索</el-button>
+          <el-input v-model="search.NICK_NAME" clearable placeholder="请输入" size="mini" />
+          <el-button type="primary" size="mini" style="margin: 0 15px">搜索</el-button>
         </el-col>
       </el-row>
     </div>
-    <el-table
-      :data="dataList"
-      border
-      style="width: 100%"
-      :row-style="{ height: '65px' }"
-      :cell-style="{ padding: '0px' }"
-    >
+    <el-table :data="dataList" border style="width: 100%" :row-style="{ height: '65px' }"
+      :cell-style="{ padding: '0px' }">
       <el-table-column prop="ID" label="ID" width="100" align="center" />
       <el-table-column prop="ACTION" label="用户行为" />
       <el-table-column prop="IP" label="IP地址" />
@@ -52,13 +38,8 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      style="margin: 30px 0"
-      background
-      layout="total,prev, pager, next"
-      :total="search.total"
-      @current-change="changePage"
-    />
+    <el-pagination style="margin: 30px 0" background layout="total,prev, pager, next" :total="search.total"
+      @current-change="changePage" />
   </div>
 </template>
 
@@ -67,7 +48,7 @@ import { getLogList } from '@/api/user'
 
 export default {
   name: 'UserList',
-  data() {
+  data () {
     return {
       dataList: [],
       search: {
@@ -75,15 +56,15 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.getDataList(this.search)
   },
   methods: {
-    changePage(e) {
+    changePage (e) {
       this.search.pageNum = e
       this.getDataList(this.search)
     },
-    getDataList(params) {
+    getDataList (params) {
       getLogList(params).then((res) => {
         console.log(res)
         this.dataList = res.data

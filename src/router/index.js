@@ -129,6 +129,12 @@ export const asyncRoutes = [
         component: () => import('@/views/pages/user/Role'),
         name: 'Role',
         meta: { title: '角色管理' }
+      },
+      {
+        path: 'university',
+        component: () => import('@/views/pages/user/University'),
+        name: 'University',
+        meta: { title: '收集管理' }
       }
     ]
   },
