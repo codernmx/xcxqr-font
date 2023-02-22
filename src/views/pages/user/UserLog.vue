@@ -10,8 +10,8 @@
     </div>
     <el-table :data="dataList" border style="width: 100%" :row-style="{ height: '65px' }"
       :cell-style="{ padding: '0px' }">
-      <el-table-column prop="ID" label="ID" width="100" align="center" />
-      <el-table-column prop="ACTION" label="用户行为" />
+      <el-table-column type="index" label="序号" width="80" align="center" />
+      <el-table-column prop="ACTION" label="用户行为" min-width="250" show-overflow-tooltip/>
       <el-table-column prop="IP" label="IP地址" />
       <el-table-column prop="ADDRESS" label="归属地" />
       <el-table-column prop="CREATE_TIME" label="创建时间" />

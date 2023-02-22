@@ -258,15 +258,15 @@ export default {
               clearTimeout(this.timer);
               this.bindTimeout = true;
             }
-            if (res.data.openid !== "") {
+            if (res.data.token) {
               clearTimeout(this.timer);
               this.showDialog = false;
-              this.$notify.error("登录请使用邮箱，小程序扫码仅做展示~~");
-              // this.$store.dispatch('user/login', res.data).then(() => {// 登录跳转 (扫码登录)
-              //   this.$router.push({ path: this.redirect || '/dashboard', query: this.otherQuery })
-              // }).catch(err => {
-              //   console.log(err, 'err')
-              // })
+              // this.$notify.error("登录请使用邮箱，小程序扫码仅做展示~~");
+              this.$store.dispatch('user/login', res.data).then(() => {// 登录跳转 (扫码登录)
+                this.$router.push({ path: this.redirect || '/dashboard', query: this.otherQuery })
+              }).catch(err => {
+                console.log(err, 'err')
+              })
             }
           })
           .catch((err) => {

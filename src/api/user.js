@@ -88,6 +88,15 @@ export function getUserRoleById (params) {
   })
 }
 
+/* 获取用户统计信息 */
+export function getUserTotal (params) {
+  return request({
+    url: '/api/bjcx/user/total',
+    method: 'get',
+    params
+  })
+}
+
 // 添加 用户
 export function addUser (data) {
   return request({

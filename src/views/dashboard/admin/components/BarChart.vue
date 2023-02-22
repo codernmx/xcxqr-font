@@ -1,9 +1,10 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <div :class="className" :style="{height:height,width:width}"/>
 </template>
 
 <script>
 import echarts from 'echarts'
+
 require('echarts/theme/macarons') // echarts theme
 import resize from './mixins/resize'
 
@@ -23,6 +24,13 @@ export default {
     height: {
       type: String,
       default: '300px'
+    },
+    userInfo: {
+      type: Array,
+      default: () => {
+        return []
+      },
+      require: true
     }
   },
   data() {
@@ -45,8 +53,20 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-
+      const xData = [], Ydata = []
+      for (let i = 30; i > 0; i--) {
+        xData.push(this.userInfo[this.userInfo.length - i].day)
+        Ydata.push(this.userInfo[this.userInfo.length - i].total)
+      }
       this.chart.setOption({
+        title: {
+          text: "近30天单日用户注册数变化趋势",
+          top: "0",
+        },
+        legend: {
+          top: "20",
+          data: ["当日用户注册数"],
+        },
         tooltip: {
           trigger: 'axis',
           axisPointer: { // 坐标轴指示器，坐标轴触发有效
@@ -54,15 +74,15 @@ export default {
           }
         },
         grid: {
-          top: 10,
-          left: '2%',
-          right: '2%',
-          bottom: '3%',
-          containLabel: true
+          top: "15%",
+          left: "1%",
+          right: "2%",
+          bottom: "1%",
+          containLabel: true,
         },
         xAxis: [{
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: xData,
           axisTick: {
             alignWithLabel: true
           }
@@ -74,25 +94,13 @@ export default {
           }
         }],
         series: [{
-          name: 'pageA',
-          type: 'bar',
+          name: '当日用户注册数',
+          type: 'line',
           stack: 'vistors',
-          barWidth: '60%',
-          data: [79, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: 'pageB',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [80, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: 'pageC',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [30, 52, 200, 334, 390, 330, 220],
+          label: {
+            show: true,
+          },
+          data: Ydata,
           animationDuration
         }]
       })

@@ -2,22 +2,22 @@
   <div class="dashboard-editor-container">
     <!-- <github-corner class="github-corner" /> -->
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+    <panel-group @handleSetLineChartData="handleSetLineChartData" :total="total" :today="today"/>
 
     <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="8">
+      <!--<el-col :xs="24" :sm="24" :lg="8">-->
+      <!--  <div class="chart-wrapper">-->
+      <!--    <raddar-chart />-->
+      <!--  </div>-->
+      <!--</el-col>-->
+      <!--<el-col :xs="24" :sm="24" :lg="8">-->
+      <!--  <div class="chart-wrapper">-->
+      <!--    <pie-chart />-->
+      <!--  </div>-->
+      <!--</el-col>-->
+      <el-col :xs="24" :sm="24" :lg="24">
         <div class="chart-wrapper">
-          <raddar-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <pie-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <bar-chart />
+          <bar-chart :userInfo="userInfo" v-if="userInfo.length > 0"/>
         </div>
       </el-col>
     </el-row>
@@ -54,7 +54,9 @@ import BarChart from "./components/BarChart";
 import TransactionTable from "./components/TransactionTable";
 import TodoList from "./components/TodoList";
 import BoxCard from "./components/BoxCard";
-
+import {
+  getUserTotal
+} from "@/api/user";
 const lineChartData = {
   newVisitis: {
     expectedData: [100, 120, 161, 134, 105, 160, 165],
@@ -90,7 +92,21 @@ export default {
   data() {
     return {
       lineChartData: lineChartData.newVisitis,
+      total:0,
+      today:0,
+      userInfo:[]
     };
+  },
+  created() {
+    getUserTotal().then(res=>{
+      const data = res.data || []
+      const total = data.reduce(function(prev,cur,index,arr){
+        return prev + cur.total;
+      },0);
+      this.userInfo = data
+      this.today = data[data.length-1].total
+      this.total = total
+    })
   },
   methods: {
     handleSetLineChartData(type) {

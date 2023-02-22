@@ -1,7 +1,7 @@
 import { login, logout, getRoles, getConfigApi } from '@/api/user'
 import { getToken, setToken, removeToken, setUserId, getUserId } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
-
+import { baseFileUrl } from '@/config/index'
 const state = {
   token: getToken(),
   name: '',
@@ -54,7 +54,7 @@ const actions = {
     // if (userInfo.token) { // 如果扫码登录直接携带了 token
     //   return new Promise((resolve, reject) => {
     //     commit('SET_TOKEN', userInfo.token)
-    //     commit('SET_NAME', userInfo.NICK_NAME) // 设置昵称
+    //     commit('SET_NAME', userInfo.NAME) // 设置昵称
     //     commit('SET_AVATAR', userInfo.avatar) // 头像
     //     setToken(userInfo.token)
     //     resolve()
@@ -90,8 +90,7 @@ const actions = {
       const userId = getUserId()
       getRoles({ ID: userId }).then(res => {
         if (res) {
-          console.log('用户信息', res.data)
-          const { roles, NICK_NAME, AVATAR_URL, EMAIL } = res.data
+          const { roles, NAME, AVATAR, EMAIL } = res.data
           const rolesNew = []
           roles.forEach(v => {
             rolesNew.push(v.ROLE_ID.toString())
@@ -101,8 +100,8 @@ const actions = {
             reject('当前用户角色信息为空~')
           }
           commit('SET_ROLES', rolesNew)
-          commit('SET_NAME', NICK_NAME)
-          commit('SET_AVATAR', AVATAR_URL)
+          commit('SET_NAME', NAME)
+          commit('SET_AVATAR', baseFileUrl + AVATAR)
           commit('SET_EMAIL', EMAIL)
           // commit('SET_INTRODUCTION', introduction)
           resolve(rolesNew)

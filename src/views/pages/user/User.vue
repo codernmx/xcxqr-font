@@ -13,13 +13,13 @@
       </el-row>
     </div>
     <el-table :data="list" border fit highlight-current-row>
-      <el-table-column prop="ID" label="ID" width="100" align="center" />
-      <el-table-column prop="AVATAR_URL" label="头像" width="80">
+      <el-table-column type="index" label="序号" width="100" align="center" />
+      <el-table-column prop="AVATAR" label="头像" width="80">
         <template v-slot="scope">
-          <el-avatar :src="scope.row.AVATAR_URL" />
+          <el-avatar :src="baseFileUrl + scope.row.AVATAR" />
         </template>
       </el-table-column>
-      <el-table-column prop="NICK_NAME" label="用户名" />
+      <el-table-column prop="NAME" label="用户名" />
       <el-table-column label="OPENID" align="center">
         <template slot-scope="scope">
           {{ scope.row.OPENID ? scope.row.OPENID : "-" }}
@@ -88,6 +88,7 @@ import {
   getRoleList,
   getUserRoleById,
 } from "@/api/user";
+import { baseFileUrl } from '@/config/index'
 export default {
   filters: {
     statusFilter (status) {
@@ -101,6 +102,7 @@ export default {
   },
   data () {
     return {
+      baseFileUrl,
       ruleForm: {
         NICK_NAME: "",
         PASSWORD: "",
@@ -170,6 +172,7 @@ export default {
       const { data } = await getUserRoleById({ ID: row.ID });
       this.ruleForm = {
         ...data,
+        NICK_NAME: data.NAME,
         ROLE: data.role,
       };
     },
