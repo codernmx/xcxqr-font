@@ -11,32 +11,11 @@
     <el-table :data="dataList" border style="width: 100%" :row-style="{ height: '65px' }"
       :cell-style="{ padding: '0px' }">
       <el-table-column type="index" label="序号" width="80" align="center" />
-      <el-table-column prop="ACTION" label="用户行为" min-width="250" show-overflow-tooltip/>
-      <el-table-column prop="IP" label="IP地址" />
-      <el-table-column prop="ADDRESS" label="归属地" />
-      <el-table-column prop="CREATE_TIME" label="创建时间" />
-      <el-table-column width="120" label="操作">
-        <template v-slot="scope">
-          <span class="editBtn">
-            <!-- <el-tooltip
-              class="item"
-              effect="dark"
-              content="修改"
-              placement="top"
-            >
-              <i class="el-icon-edit" />
-            </el-tooltip>
-            <el-tooltip
-              class="item"
-              effect="dark"
-              content="删除"
-              placement="top"
-            >
-              <i class="el-icon-delete" style="margin: 0 15px" />
-            </el-tooltip> -->
-          </span>
-        </template>
-      </el-table-column>
+      <el-table-column prop="action" label="用户行为" min-width="100" show-overflow-tooltip/>
+      <el-table-column prop="ip" label="IP地址" />
+      <el-table-column prop="address" label="归属地" />
+      <el-table-column prop="createTime" label="创建时间" />
+      <el-table-column prop="http_user_agent" width="250" label="请求来源" show-overflow-tooltip/>
     </el-table>
     <el-pagination style="margin: 30px 0" background layout="total,prev, pager, next" :total="search.total"
       @current-change="changePage" />

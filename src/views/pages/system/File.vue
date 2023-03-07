@@ -4,7 +4,7 @@
       <el-row type="flex" justify="space-between" style="margin: 15px 0">
         <el-col :span="5" style="display: flex">
           <el-input
-              v-model="search.NAME"
+              v-model="search.name"
               placeholder="请输入原文件名"
               size="mini"
               clearable
@@ -47,7 +47,7 @@
               fit="scale-down"
               :preview-src-list="[getImgUrl(scope.row)]"
           />
-          <span v-else class="suffix">{{getImgUrl(scope.row)}}</span>
+          <span v-else class="suffix">{{ getImgUrl(scope.row) }}</span>
         </template>
       </el-table-column>
 
@@ -63,21 +63,21 @@
             }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="OLD_NAME" label="原始名称" show-overflow-tooltip/>
-      <el-table-column prop="SUFFIX" label="文件类型" width="100"/>
+      <el-table-column prop="oldName" label="原始名称" show-overflow-tooltip/>
+      <el-table-column prop="suffix" label="文件类型" width="100"/>
       <el-table-column label="文件名" show-overflow-tooltip align="center">
         <template v-slot="scope">
-          <span class="copyName" @click="copy('.copyName', scope.row.NAME)">{{
-              scope.row.NAME
+          <span class="copyName" @click="copy('.copyName', scope.row.name)">{{
+              scope.row.name
             }}</span>
         </template>
       </el-table-column>
       <el-table-column label="文件大小" width="100">
         <template v-slot="scope">
-          <span>{{ (scope.row.SIZE / 1024 / 1024).toFixed(4) }}MB</span>
+          <span>{{ (scope.row.size / 1024 / 1024).toFixed(4) }}MB</span>
         </template>
       </el-table-column>
-      <el-table-column prop="CREATE_TIME" label="创建时间" align="center"/>
+      <el-table-column prop="createTime" label="创建时间" align="center"/>
 
       <el-table-column label="操作" width="110" align="center">
         <template slot-scope="scope">
@@ -99,7 +99,7 @@
               <i
                   class="el-icon-delete"
                   style="margin: 0 15px"
-                  @click="del(scope.row.ID)"
+                  @click="del(scope.row.id)"
               />
             </el-tooltip>
           </span>
@@ -141,7 +141,7 @@
       </div>
     </el-dialog>
     <el-dialog title="修改文件名" :visible.sync="editDialog" width="40%" center>
-      <el-input v-model="edit.OLD_NAME" placeholder="请输入文件名"/>
+      <el-input v-model="edit.oldName" placeholder="请输入文件名"/>
       <span slot="footer">
         <el-button type="primary" @click="addSubmit">确 定</el-button>
       </span>
@@ -183,7 +183,7 @@ export default {
       edit: false,
       search: {
         pageNum: 1,
-        NAME: '',
+        name: '',
         total: 0
       }
     }
@@ -221,15 +221,15 @@ export default {
       this.$message.success('上传成功')
     },
     getImgUrl(row) {
-      const suffix = row.NAME.substring(row.NAME.lastIndexOf('.'))
+      const suffix = row.name.substring(row.name.lastIndexOf('.'))
       if (suffix == '.jpg' || suffix == '.png' || suffix == '.jpeg') {
-        return this.config.BASE_URL_FILE + row.PATH
+        return this.config.value + row.path
       } else {
         return '--格式不支持--'
       }
     },
     getUrl(row) {
-      return this.config.BASE_URL_FILE + row.PATH
+      return this.config.value + row.path
     },
     /* 关闭弹窗刷新列表 */
     dialogClose() {
@@ -240,9 +240,9 @@ export default {
       this.search.pageNum = e
       this.fetchData()
     },
-    del(ID) {
+    del(id) {
       this.$confirm('是否删除数据', {type: 'warning'}).then(() => {
-        delFile({ID}).then((res) => {
+        delFile({id}).then((res) => {
           if (res.code == 200) {
             this.$notify.success('删除成功~~')
             this.fetchData()
@@ -257,8 +257,8 @@ export default {
     },
     addSubmit() {
       fileUpadte({
-        ID: this.edit.ID,
-        OLD_NAME: this.edit.OLD_NAME
+        id: this.edit.id,
+        oldName: this.edit.oldName
       }).then((res) => {
         if (res.code == 200) {
           this.editDialog = false
@@ -279,10 +279,11 @@ export default {
 
 <style lang="scss" scoped>
 .app-container {
-  .suffix{
+  .suffix {
     font-size: 8px;
     color: gray;
   }
+
   .editBtn {
     font-size: 18px;
   }

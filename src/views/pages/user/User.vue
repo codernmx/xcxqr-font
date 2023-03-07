@@ -3,7 +3,7 @@
     <div class="search">
       <el-row type="flex" justify="space-between" style="margin: 15px 0">
         <el-col :span="4" style="display: flex">
-          <el-input v-model="search.NICK_NAME" clearable placeholder="请输入用户名" size="mini" />
+          <el-input v-model="search.name" clearable placeholder="请输入用户名" size="mini" />
           <el-button type="primary" size="mini" style="margin: 0 15px" @click=" search.pageNum = 1; fetchData();">搜索
           </el-button>
         </el-col>
@@ -12,30 +12,30 @@
         </el-col>
       </el-row>
     </div>
-    <el-table :data="list" border fit highlight-current-row>
+    <el-table :data="list" border fit highlight-current-row current-row-key="id">
       <el-table-column type="index" label="序号" width="100" align="center" />
-      <el-table-column prop="AVATAR" label="头像" width="80">
+      <el-table-column prop="avatar" label="头像" width="80">
         <template v-slot="scope">
-          <el-avatar :src="baseFileUrl + scope.row.AVATAR" />
+          <el-avatar :src="baseFileUrl + scope.row.avatar" />
         </template>
       </el-table-column>
-      <el-table-column prop="NAME" label="用户名" />
-      <el-table-column label="OPENID" align="center">
+      <el-table-column prop="name" label="用户名" />
+      <el-table-column label="openId" align="center">
         <template slot-scope="scope">
-          {{ scope.row.OPENID ? scope.row.OPENID : "-" }}
+          {{ scope.row.openId ? scope.row.openId : "-" }}
         </template>
       </el-table-column>
       <el-table-column label="登录邮箱" align="center">
         <template slot-scope="scope">
-          {{ scope.row.EMAIL ? scope.row.EMAIL : "-" }}
+          {{ scope.row.email ? scope.row.email : "-" }}
         </template>
       </el-table-column>
-      <!-- <el-table-column prop="EMAIL" label="邮箱" /> -->
-      <el-table-column prop="CREATE_TIME" label="创建时间" />
+      <!-- <el-table-column prop="email" label="邮箱" /> -->
+      <el-table-column prop="createTime" label="创建时间" />
       <el-table-column label="是否启用" width="100" align="center">
         <template v-slot="scope">
-          <el-switch v-model="scope.row.STATUS" :inactive-value="1" :active-value="0" active-color="#13ce66"
-            inactive-color="#ff4949" @change="(val) => {changeStatus(val, scope.row.ID);}">
+          <el-switch v-model="scope.row.status" :inactive-value="1" :active-value="0" active-color="#13ce66"
+            inactive-color="#ff4949" @change="(val) => {changeStatus(val, scope.row.id);}">
           </el-switch>
         </template>
       </el-table-column>
@@ -46,7 +46,7 @@
               <i class="el-icon-edit" @click="editItem(scope.row)" />
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="删除" placement="top">
-              <i class="el-icon-delete" style="margin: 0 15px" @click="del(scope.row.ID)" />
+              <i class="el-icon-delete" style="margin: 0 15px" @click="del(scope.row.id)" />
             </el-tooltip>
           </span>
         </template>
@@ -57,15 +57,15 @@
     <el-dialog :title="title" :visible.sync="dialog" width="40%" center>
       <div>
         <el-form ref="ruleForm" :model="ruleForm" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="用户昵称" prop="NICK_NAME">
-            <el-input v-model="ruleForm.NICK_NAME" />
+          <el-form-item label="用户昵称" prop="name">
+            <el-input v-model="ruleForm.name" />
           </el-form-item>
-          <el-form-item label="邮箱号码" prop="EMAIL">
-            <el-input v-model="ruleForm.EMAIL" />
+          <el-form-item label="邮箱号码" prop="email">
+            <el-input v-model="ruleForm.email" />
           </el-form-item>
           <el-form-item label="角色信息" v-if="edit">
-            <el-select v-model="ruleForm.ROLE" style="width: 100%" placeholder="请选择角色" multiple>
-              <el-option v-for="item in roleList" :key="item.id" :label="item.NAME" :value="item.ID" />
+            <el-select v-model="ruleForm.role" style="width: 100%" placeholder="请选择角色" multiple>
+              <el-option v-for="(item,index) in roleList" :key="index" :label="item.name" :value="item.id" />
             </el-select>
           </el-form-item>
         </el-form>
@@ -104,9 +104,9 @@ export default {
     return {
       baseFileUrl,
       ruleForm: {
-        NICK_NAME: "",
-        PASSWORD: "",
-        ROLE: [],
+        name: "",
+        password: "",
+        role: [],
       },
       title: "",
       list: [],
@@ -115,7 +115,7 @@ export default {
       edit: false,
       search: {
         pageNum: 1,
-        NICK_NAME: "",
+        name: "",
         total: 0,
       },
     };
@@ -126,9 +126,9 @@ export default {
     this.getRoleList();
   },
   methods: {
-    changeStatus (STATUS, ID) {
-      console.log(STATUS, ID);
-      updateUserStatus({ ID, STATUS }).then((res) => {
+    changeStatus (status, id) {
+      console.log(status, id);
+      updateUserStatus({ id, status }).then((res) => {
         if (res.code == 200) {
           this.$notify.success(res.msg);
           this.fetchData();
@@ -139,7 +139,7 @@ export default {
       getRoleList({
         pageNum: 1,
         pageSize: 100,
-        NAME: "",
+        name: "",
       }).then((res) => {
         this.roleList = res.data;
       });
@@ -148,9 +148,9 @@ export default {
       this.search.pageNum = e;
       this.fetchData();
     },
-    del (ID) {
+    del (id) {
       this.$confirm("是否删除数据", { type: "warning" }).then((res) => {
-        delUser({ ID }).then((res) => {
+        delUser({ id }).then((res) => {
           if (res.code == 200) {
             this.$notify.success(res.msg);
             this.fetchData();
@@ -160,7 +160,7 @@ export default {
     },
     add () {
       this.dialog = true;
-      this.ruleForm = { NICK_NAME: "", PASSWORD: "" };
+      this.ruleForm = { name: "", password: "" };
       this.edit = false;
       this.title = "新增用户";
     },
@@ -169,11 +169,11 @@ export default {
       this.dialog = true;
       this.edit = true;
       this.title = "编辑用户";
-      const { data } = await getUserRoleById({ ID: row.ID });
+      const { data } = await getUserRoleById({ id: row.id });
       this.ruleForm = {
         ...data,
-        NICK_NAME: data.NAME,
-        ROLE: data.role,
+        name: data.name,
+        role: data.role,
       };
     },
     addSubmit () {

@@ -32,6 +32,7 @@ const mutations = {
     state.email = email
   },
   SET_CONFIG: (state, config) => { /* 附件基本路径 */
+    console.log(config)
     state.config = config
   }
 }
@@ -54,17 +55,17 @@ const actions = {
     // if (userInfo.token) { // 如果扫码登录直接携带了 token
     //   return new Promise((resolve, reject) => {
     //     commit('SET_TOKEN', userInfo.token)
-    //     commit('SET_NAME', userInfo.NAME) // 设置昵称
+    //     commit('SET_NAME', userInfo.name) // 设置昵称
     //     commit('SET_AVATAR', userInfo.avatar) // 头像
     //     setToken(userInfo.token)
     //     resolve()
     //   })
     // } else {
-    const { token, ID } = userInfo
+    const { token, id } = userInfo
     return new Promise((resolve, reject) => {
-      if (ID) {
-        // sessionStorage.setItem('userId', ID)
-        setUserId(ID)
+      if (id) {
+        // sessionStorage.setItem('userId', id)
+        setUserId(id)
         commit('SET_TOKEN', token)
         setToken(token)
         resolve()
@@ -88,21 +89,21 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       const userId = getUserId()
-      getRoles({ ID: userId }).then(res => {
+      getRoles({ id: userId }).then(res => {
         if (res) {
-          const { roles, NAME, AVATAR, EMAIL } = res.data
+          const { roles, name, avatar, email } = res.data
           const rolesNew = []
           roles.forEach(v => {
-            rolesNew.push(v.ROLE_ID.toString())
+            rolesNew.push(v.roleId.toString())
           })
           // roles must be a non-empty array
           if (!rolesNew || rolesNew.length <= 0) {
             reject('当前用户角色信息为空~')
           }
           commit('SET_ROLES', rolesNew)
-          commit('SET_NAME', NAME)
-          commit('SET_AVATAR', baseFileUrl + AVATAR)
-          commit('SET_EMAIL', EMAIL)
+          commit('SET_NAME', name)
+          commit('SET_AVATAR', baseFileUrl + avatar)
+          commit('SET_EMAIL', email)
           // commit('SET_INTRODUCTION', introduction)
           resolve(rolesNew)
         } else {
@@ -113,7 +114,7 @@ const actions = {
   },
   getConfig({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getConfigApi().then(res => {
+      getConfigApi({id:'85ba953251a5413fb0679a64639575e5'}).then(res => {
         commit('SET_CONFIG', res.data)
         resolve()
       })

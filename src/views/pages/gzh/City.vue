@@ -17,19 +17,21 @@
               search.pageNum = 1;
               fetchData();
             "
-            >搜索</el-button
-          >
+          >搜索</el-button>
         </el-col>
         <el-col :span="1">
-          <el-button type="primary" size="mini" icon="el-icon-plus" @click="add"
-            >添加</el-button
-          >
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            @click="add"
+          >添加</el-button>
         </el-col>
       </el-row>
     </div>
     <!-- show-overflow-tooltip -->
     <el-table :data="list" border fit highlight-current-row>
-      <el-table-column prop="id" label="ID" width="100" align="center" />
+      <el-table-column type="index" label="序号" width="100" align="center" />
       <el-table-column label="客户">
         <template slot-scope="scope">
           <el-select v-model="scope.row.app_id" disabled>
@@ -38,8 +40,7 @@
               :key="item.id"
               :label="item.title"
               :value="item.appid"
-            >
-            </el-option>
+            />
           </el-select>
         </template>
       </el-table-column>
@@ -110,8 +111,7 @@
                     :key="item.id"
                     :label="item.title"
                     :value="item.appid"
-                  >
-                  </el-option>
+                  />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -180,28 +180,28 @@
 </template>
 
 <script>
-import { getRoleList, getUserRoleById } from "@/api/user";
-import { getCityList, getCityCustomerList, cityInsert,cityDel,cityUpdate } from "@/api/gzh";
+import { getRoleList, getUserRoleById } from '@/api/user'
+import { getCityList, getCityCustomerList, cityInsert, cityDel, cityUpdate } from '@/api/gzh'
 export default {
-  name: "City",
+  name: 'City',
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: "success",
-        draft: "gray",
-        deleted: "danger",
-      };
-      return statusMap[status];
-    },
+        published: 'success',
+        draft: 'gray',
+        deleted: 'danger'
+      }
+      return statusMap[status]
+    }
   },
   data() {
     return {
       ruleForm: {
-        appid: "",
-        PASSWORD: "",
-        ROLE: [],
+        appid: '',
+        PASSWORD: '',
+        ROLE: []
       },
-      title: "",
+      title: '',
       list: [],
       customerList: [],
       roleList: [],
@@ -209,92 +209,92 @@ export default {
       edit: false,
       search: {
         pageNum: 1,
-        appid: "",
-        total: 0,
-      },
-    };
+        appid: '',
+        total: 0
+      }
+    }
   },
   created() {
-    this.fetchData();
-    console.log(this.$store.getters.roles);
-    this.getRoleList();
-    this.getCustomer();
+    this.fetchData()
+    console.log(this.$store.getters.roles)
+    this.getRoleList()
+    this.getCustomer()
   },
   methods: {
     async getCustomer() {
       try {
-        const res = await getCityCustomerList();
-        this.customerList = res.data;
+        const res = await getCityCustomerList()
+        this.customerList = res.data
       } catch (error) {}
     },
     getRoleList() {
       getRoleList({
         pageNum: 1,
         pageSize: 100,
-        NAME: "",
+        NAME: ''
       }).then((res) => {
-        this.roleList = res.data;
-      });
+        this.roleList = res.data
+      })
     },
     changePage(e) {
-      this.search.pageNum = e;
-      this.fetchData();
+      this.search.pageNum = e
+      this.fetchData()
     },
     del(id) {
-      this.$confirm("是否删除数据", { type: "warning" }).then((res) => {
+      this.$confirm('是否删除数据', { type: 'warning' }).then((res) => {
         cityDel({ id }).then((res) => {
           if (res.code == 200) {
-            this.$notify.success(res.msg);
-            this.fetchData();
+            this.$notify.success(res.msg)
+            this.fetchData()
           }
-        });
-      });
+        })
+      })
     },
     add() {
-      this.dialog = true;
-      this.ruleForm = { appid: "", PASSWORD: "" };
-      this.edit = false;
-      this.title = "新增用户";
+      this.dialog = true
+      this.ruleForm = { appid: '', PASSWORD: '' }
+      this.edit = false
+      this.title = '新增用户'
     },
     // 修改
     async editItem(row) {
-      this.dialog = true;
-      this.edit = true;
-      this.title = "编辑";
+      this.dialog = true
+      this.edit = true
+      this.title = '编辑'
       this.ruleForm = {
         ...row,
-        appid:row.app_id
-      };
+        appid: row.app_id
+      }
     },
     addSubmit() {
       if (this.edit) {
         // 修改
         cityUpdate(this.ruleForm).then((res) => {
           if (res.code == 200) {
-            this.$notify.success(res.msg);
-            this.dialog = false;
-            this.fetchData();
+            this.$notify.success(res.msg)
+            this.dialog = false
+            this.fetchData()
           }
-        });
+        })
       } else {
         cityInsert(this.ruleForm).then((res) => {
           if (res.code == 200) {
-            this.$notify.success(res.msg);
-            this.dialog = false;
-            this.fetchData();
+            this.$notify.success(res.msg)
+            this.dialog = false
+            this.fetchData()
           }
-        });
+        })
       }
     },
     fetchData() {
       getCityList(this.search).then((res) => {
-        console.log(res, "res");
-        this.list = res.data;
-        this.search.total = res.total;
-      });
-    },
-  },
-};
+        console.log(res, 'res')
+        this.list = res.data
+        this.search.total = res.total
+      })
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 .app-container {

@@ -3,11 +3,17 @@
     <div class="search">
       <el-row type="flex" justify="space-between" style="margin: 15px 0">
         <el-col :span="4" style="display: flex">
-          <el-input v-model="search.NAME" placeholder="请输入角色名称" clearable size="mini" />
-          <el-button type="primary" size="mini" style="margin: 0 15px" @click="
+          <el-input v-model="search.name" placeholder="请输入角色名称" clearable size="mini" />
+          <el-button
+            type="primary"
+            size="mini"
+            style="margin: 0 15px"
+            @click="
               search.pageNum = 1;
               fetchData();
-            ">搜索</el-button>
+            "
+          >搜索
+          </el-button>
         </el-col>
         <el-col :span="1">
           <el-button type="primary" size="mini" icon="el-icon-plus" @click="add">添加</el-button>
@@ -15,10 +21,10 @@
       </el-row>
     </div>
     <el-table :data="list" border fit highlight-current-row @row-dblclick="dblclick">
-      <el-table-column prop="ID" label="ID" width="100" align="center" />
-      <el-table-column prop="NAME" label="收集项目名称" />
-      <el-table-column prop="REMARKS" label="备注信息" />
-      <el-table-column prop="CREATE_TIME" label="创建时间" />
+      <el-table-column type="index" label="序号" width="100" align="center" />
+      <el-table-column prop="name" label="收集项目名称" />
+      <el-table-column prop="remarks" label="备注信息" />
+      <el-table-column prop="createTime" label="创建时间" />
       <el-table-column label="操作" width="110" align="center">
         <template slot-scope="scope">
           <span class="editBtn">
@@ -29,7 +35,7 @@
               <i class="el-icon-download" style="margin: 0 15px" @click="downLoad(scope.row)" />
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="删除" placement="top">
-              <i class="el-icon-delete" @click="del(scope.row.ID)" />
+              <i class="el-icon-delete" @click="del(scope.row.id)" />
             </el-tooltip>
           </span>
         </template>
@@ -39,11 +45,11 @@
     <el-dialog :title="title" :visible.sync="dialog" width="40%" center>
       <div>
         <el-form ref="ruleForm" :model="ruleForm" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="收集项目名称" prop="NAME">
-            <el-input v-model="ruleForm.NAME" />
+          <el-form-item label="收集项目名称" prop="name">
+            <el-input v-model="ruleForm.name" />
           </el-form-item>
-          <el-form-item label="备注信息" prop="REMARKS">
-            <el-input v-model="ruleForm.REMARKS" />
+          <el-form-item label="备注信息" prop="remarks">
+            <el-input v-model="ruleForm.remarks" />
           </el-form-item>
         </el-form>
       </div>
@@ -54,17 +60,17 @@
     </el-dialog>
 
     <!-- 双击详情 -->
-    <el-dialog title="详细信息" :visible.sync="detail" width="50%" center>
+    <el-dialog title="上传详细信息情况" :visible.sync="detail" width="50%" center>
       <el-table :data="alreadyUploadList" border fit highlight-current-row>
         <el-table-column type="index" label="序号" width="100" align="center" />
-        <el-table-column prop="NAME" label="姓名" />
-        <el-table-column prop="NUMBER" label="学号" />
+        <el-table-column prop="name" label="姓名" />
+        <el-table-column prop="number" label="学号" />
         <el-table-column label="图片" width="150" align="center">
           <template v-slot="scope">
             <el-image lazy style="width: 75px; height: 75px" :src="getImgUrl(scope.row)" fit="scale-down" :preview-src-list="[getImgUrl(scope.row)]" />
           </template>
         </el-table-column>
-        <el-table-column prop="CREATE_TIME" label="上传时间" />
+        <el-table-column prop="createTime" label="上传时间" />
       </el-table>
     </el-dialog>
   </div>
@@ -73,10 +79,11 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getGatherList, addGather, updateGather, delGather, alreadyUpload, getCompressingFile } from '@/api/user'
+
 export default {
   name: 'Role',
   filters: {
-    statusFilter (status) {
+    statusFilter(status) {
       const statusMap = {
         published: 'success',
         draft: 'gray',
@@ -88,14 +95,14 @@ export default {
   computed: {
     ...mapGetters(['config'])
   },
-  data () {
+  data() {
     return {
       title: '',
       ruleForm: {
-        NAME: '',
-        REMARKS: ''
+        name: '',
+        remarks: ''
       },
-      showName: '',//当前展示的项目
+      showName: '', // 当前展示的项目
       alreadyUploadList: [],
       list: [],
       dialog: false,
@@ -103,39 +110,39 @@ export default {
       edit: false,
       search: {
         pageNum: 1,
-        NAME: '',
+        name: '',
         total: 0
       }
     }
   },
-  created () {
+  created() {
     this.fetchData()
     console.log(this.$store.getters.roles)
   },
   methods: {
-    changePage (e) {
+    changePage(e) {
       this.search.pageNum = e
       this.fetchData()
     },
-    downLoad ({ NAME }) {
-      getCompressingFile({ folderName: NAME }).then(res => {
+    downLoad({ name }) {
+      getCompressingFile({ folderName: name }).then(res => {
         console.log(res, 'res')
         if (res.code == 200) {
-          window.open(this.config.BASE_URL_FILE + res.data)
-        }else{
+          window.open(this.config.value + res.data)
+        } else {
           this.$message.error('报错了~~请联系小主人~~')
         }
       })
     },
-    getImgUrl (row) {
-      const { NAME, NUMBER, SUFFIX } = row
-      // return this.config.BASE_URL_FILE + `${this.showName}/${NAME}${NUMBER}${SUFFIX}`
-      let url = this.config.BASE_URL_FILE + `${this.showName}/${NUMBER}${NAME}${SUFFIX}`
+    getImgUrl(row) {
+      const { name, number, suffix } = row
+      // return this.config.value + `${this.showName}/${name}${number}${suffix}`
+      const url = this.config.value + `university/${this.showName}/${number}${name}${suffix}`
       return url
     },
-    del (ID) {
+    del(id) {
       this.$confirm('是否删除数据', { type: 'warning' }).then((res) => {
-        delGather({ ID }).then((res) => {
+        delGather({ id }).then((res) => {
           if (res.code == 200) {
             this.$notify.success(res.msg)
             this.fetchData()
@@ -143,27 +150,27 @@ export default {
         })
       })
     },
-    add () {
+    add() {
       this.dialog = true
-      this.ruleForm = { NAME: '', REMARKS: '' }
+      this.ruleForm = { name: '', remarks: '' }
       this.edit = false
       this.title = '新增收集项目'
     },
     // 修改
-    editItem (row) {
+    editItem(row) {
       this.$notify.error('暂不支持修改~')
       // this.dialog = true
       // this.title = '修改收集项目信息'
       // this.ruleForm = JSON.parse(JSON.stringify(row))
       // this.edit = true
     },
-    dblclick (row) {
-      const { ID, NAME } = row
-      this.showName = NAME
-      this.alreadyUpload({ ID })
+    dblclick(row) {
+      const { id, name } = row
+      this.showName = name
+      this.alreadyUpload({ id })
       this.detail = true
     },
-    addSubmit () {
+    addSubmit() {
       if (this.edit) {
         // 修改
         updateGather(this.ruleForm).then((res) => {
@@ -183,11 +190,11 @@ export default {
         })
       }
     },
-    async alreadyUpload (param) {
+    async alreadyUpload(param) {
       const { data } = await alreadyUpload(param)
       this.alreadyUploadList = data || []
     },
-    fetchData () {
+    fetchData() {
       getGatherList(this.search).then((res) => {
         console.log(res, 'res')
         this.list = res.data

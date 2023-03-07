@@ -108,7 +108,7 @@ export const asyncRoutes = [
     meta: {
       title: '用户管理',
       icon: 'user',
-      roles: ['1'] // 超级管理员
+      roles: ['1','2'] // 超级管理员
 
     },
     children: [
@@ -116,25 +116,31 @@ export const asyncRoutes = [
         path: 'list',
         component: () => import('@/views/pages/user/User'),
         name: 'list',
-        meta: { title: '用户管理' }
+        meta: { title: '用户管理',roles: ['1'] }
+      },
+      {
+        path: 'invite',
+        component: () => import('@/views/pages/user/Invite'),
+        name: 'invite',
+        meta: { title: '邀请列表',roles: ['1','2'] }
       },
       {
         path: 'log',
         component: () => import('@/views/pages/user/UserLog'),
         name: 'log',
-        meta: { title: '用户日志' }
+        meta: { title: '用户日志',roles: ['1','2'] }
       },
       {
         path: 'role',
         component: () => import('@/views/pages/user/Role'),
         name: 'Role',
-        meta: { title: '角色管理' }
+        meta: { title: '角色管理',roles: ['1'] }
       },
       {
         path: 'university',
         component: () => import('@/views/pages/user/University'),
         name: 'University',
-        meta: { title: '收集管理' }
+        meta: { title: '收集管理',roles: ['1'] }
       }
     ]
   },

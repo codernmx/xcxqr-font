@@ -60,10 +60,11 @@ export function getRoles (params) {
   })
 }
 /* 获取配置信息 */
-export function getConfigApi () {
+export function getConfigApi (params) {
   return request({
     url: '/api/get/config',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
@@ -79,6 +80,16 @@ export function getUserList (params) {
     params
   })
 }
+
+//获取邀请了用户的列表
+export function getUserInviteList (params) {
+  return request({
+    url: '/api/bjcx/user/list/have/children',
+    method: 'get',
+    params
+  })
+}
+
 /* 获取用户下角色信息 */
 export function getUserRoleById (params) {
   return request({
