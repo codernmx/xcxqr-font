@@ -1,5 +1,6 @@
 <template>
   <div class="login-container">
+    <canvas id="canvas" style="display: block;"></canvas>
     <el-form
       ref="loginForm"
       :model="loginForm"
@@ -97,7 +98,6 @@
         </div>
       </div>
     </el-form>
-
     <el-dialog
       title="微信扫码登录"
       :visible.sync="showDialog"
@@ -125,15 +125,14 @@ import { validUsername } from "@/utils/validate";
 import { baseURL } from "@/config/index";
 import { getCode, getToken, getUUid, sendCode, codeLogin } from "@/api/user";
 import { GlobalGetUuidShort } from "@/utils/index";
+import initLoginBg from "./init.js"
 
 export default {
   name: "Login",
   components: {},
   data() {
     const validateUsername = (rule, value, callback) => {
-      const reg =
-        /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,5}$/;
-      //       !reg.test(value)
+      const reg =/^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,5}$/;
       if (!reg.test(value)) {
         callback(new Error("请输入正确邮箱号码"));
       } else {
@@ -158,7 +157,7 @@ export default {
       },
       loginRules: {
         username: [
-          { required: true, trigger: "blur", validator: validateUsername },
+          { required: true, trigger: "change", validator: validateUsername },
         ],
       },
       passwordType: "password",
@@ -186,6 +185,7 @@ export default {
     },
   },
   created() {
+    
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
@@ -194,6 +194,9 @@ export default {
     } else if (this.loginForm.password === "") {
       this.$refs.password.focus();
     }
+
+    initLoginBg();
+    window.onresize = function(){initLoginBg()};
   },
   destroyed() {
     // window.removeEventListener('storage', this.afterQRScan)
@@ -377,6 +380,10 @@ $cursor: #fff;
 
 /* reset element-ui css */
 .login-container {
+  position: relative;
+  #canvas{
+    position: absolute;
+  }
   .el-input {
     display: inline-block;
     height: 47px;
@@ -400,8 +407,8 @@ $cursor: #fff;
   }
 
   .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid #1890FF;
+    background:#283443;
     border-radius: 5px;
     color: #454545;
   }

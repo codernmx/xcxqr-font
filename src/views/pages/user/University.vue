@@ -3,7 +3,7 @@
     <div class="search">
       <el-row type="flex" justify="space-between" style="margin: 15px 0">
         <el-col :span="4" style="display: flex">
-          <el-input v-model="search.name" placeholder="请输入角色名称" clearable size="mini" />
+          <el-input v-model="search.name" placeholder="请输入名称" clearable size="mini" />
           <el-button
             type="primary"
             size="mini"
@@ -28,13 +28,13 @@
       <el-table-column label="操作" width="110" align="center">
         <template slot-scope="scope">
           <span class="editBtn">
-            <el-tooltip class="item" effect="dark" content="修改" placement="top">
+            <!-- <el-tooltip class="item" effect="dark" content="修改" placement="top">
               <i class="el-icon-edit" @click="editItem(scope.row)" />
-            </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="下载所有文件" placement="top">
+            </el-tooltip> -->
+            <el-tooltip class="item" effect="dark" content="批量下载" placement="top">
               <i class="el-icon-download" style="margin: 0 15px" @click="downLoad(scope.row)" />
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="删除" placement="top">
+            <el-tooltip class="item" effect="dark" content="设置上传页面不显示" placement="top" v-if="!scope.row.deleteTime">
               <i class="el-icon-delete" @click="del(scope.row.id)" />
             </el-tooltip>
           </span>
@@ -111,7 +111,8 @@ export default {
       search: {
         pageNum: 1,
         name: '',
-        total: 0
+        total: 0,
+        all:'1' //获取所有
       }
     }
   },
@@ -141,7 +142,7 @@ export default {
       return url
     },
     del(id) {
-      this.$confirm('是否删除数据', { type: 'warning' }).then((res) => {
+      this.$confirm('是否终止此项目的收集？', { type: 'warning' }).then((res) => {
         delGather({ id }).then((res) => {
           if (res.code == 200) {
             this.$notify.success(res.msg)
@@ -196,7 +197,6 @@ export default {
     },
     fetchData() {
       getGatherList(this.search).then((res) => {
-        console.log(res, 'res')
         this.list = res.data
         this.search.total = 1
       })
