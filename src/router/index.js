@@ -65,6 +65,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/resume',
+    component: () => import('@/views/pages/resume/index'),
+    hidden: true
+  },
+  {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),
     hidden: true
@@ -108,7 +113,7 @@ export const asyncRoutes = [
     meta: {
       title: '用户管理',
       icon: 'user',
-      roles: ['1','2'] // 超级管理员
+      roles: ['1', '2'] // 超级管理员
 
     },
     children: [
@@ -116,31 +121,31 @@ export const asyncRoutes = [
         path: 'list',
         component: () => import('@/views/pages/user/User'),
         name: 'list',
-        meta: { title: '用户管理',roles: ['1'] }
+        meta: { title: '用户管理', roles: ['1'] }
       },
       {
         path: 'invite',
         component: () => import('@/views/pages/user/Invite'),
         name: 'invite',
-        meta: { title: '邀请列表',roles: ['1','2'] }
+        meta: { title: '邀请列表', roles: ['1', '2'] }
       },
       {
         path: 'log',
         component: () => import('@/views/pages/user/UserLog'),
         name: 'log',
-        meta: { title: '用户日志',roles: ['1','2'] }
+        meta: { title: '用户日志', roles: ['1', '2'] }
       },
       {
         path: 'role',
         component: () => import('@/views/pages/user/Role'),
         name: 'Role',
-        meta: { title: '角色管理',roles: ['1'] }
+        meta: { title: '角色管理', roles: ['1'] }
       },
       {
         path: 'university',
         component: () => import('@/views/pages/user/University'),
         name: 'University',
-        meta: { title: '收集管理',roles: ['1'] }
+        meta: { title: '收集管理', roles: ['1'] }
       }
     ]
   },
@@ -176,7 +181,7 @@ export const asyncRoutes = [
     meta: {
       title: '公众号管理',
       icon: 'example',
-      roles: ['1','5'] // 公众号管理员 + 超级管理员
+      roles: ['1', '5'] // 公众号管理员 + 超级管理员
 
     },
     children: [
@@ -191,7 +196,7 @@ export const asyncRoutes = [
         component: () => import('@/views/pages/gzh/Notice'),
         name: 'Notice',
         meta: { title: '发送通知' }
-      },
+      }
     ]
   },
 
