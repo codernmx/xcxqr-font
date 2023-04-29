@@ -40,6 +40,13 @@ module.exports = {
           '^/api/': '/api/'
         }
       },
+      '/mini/': {
+        target: 'https://bt.nmxgzs.cn/', //本地',
+        changeOrigin: true, //是否跨域
+        pathRewrite: {
+          '^/mini/': '/mini/'
+        }
+      },
     },
     open: true,
     overlay: {
