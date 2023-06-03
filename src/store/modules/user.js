@@ -102,7 +102,7 @@ const actions = {
           }
           commit('SET_ROLES', rolesNew)
           commit('SET_NAME', name)
-          commit('SET_AVATAR', baseFileUrl + avatar)
+          commit('SET_AVATAR', avatar)
           commit('SET_EMAIL', email)
           // commit('SET_INTRODUCTION', introduction)
           resolve(rolesNew)
@@ -114,7 +114,7 @@ const actions = {
   },
   getConfig({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getConfigApi({id:'85ba953251a5413fb0679a64639575e5'}).then(res => {
+      getConfigApi({ id: '85ba953251a5413fb0679a64639575e5' }).then(res => {
         commit('SET_CONFIG', res.data)
         resolve()
       })

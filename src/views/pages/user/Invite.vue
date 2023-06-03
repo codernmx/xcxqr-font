@@ -16,7 +16,7 @@
       <el-table-column type="index" label="序号" width="100" align="center" />
       <el-table-column prop="avatar" label="头像" width="80">
         <template v-slot="scope">
-          <el-avatar :src="baseFileUrl + scope.row.avatar" />
+          <el-avatar :src="scope.row.avatar" />
         </template>
       </el-table-column>
       <el-table-column prop="name" label="用户名" />
@@ -45,7 +45,7 @@
         <el-table-column type="index" label="序号" width="100" align="center" />
         <el-table-column prop="avatar" label="头像" width="80">
           <template v-slot="scope">
-            <el-avatar :src="baseFileUrl + scope.row.avatar" />
+            <el-avatar :src="scope.row.avatar" />
           </template>
         </el-table-column>
         <el-table-column prop="name" label="用户名" />
