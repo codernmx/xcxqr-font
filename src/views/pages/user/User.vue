@@ -32,6 +32,8 @@
       </el-table-column>
       <!-- <el-table-column prop="email" label="邮箱" /> -->
       <el-table-column prop="createTime" label="创建时间" />
+      <el-table-column prop="loginNum" label="登录次数" />
+      <el-table-column prop="updateTime" label="最近登录时间" />
       <el-table-column label="是否启用" width="100" align="center">
         <template v-slot="scope">
           <el-switch
@@ -208,9 +210,8 @@ export default {
     },
     fetchData() {
       getUserList(this.search).then((res) => {
-        console.log(res, 'res')
-        this.list = res.data
-        this.search.total = res.total
+        this.list = res.data.rows
+        this.search.total = res.data.count
       })
     }
   }
