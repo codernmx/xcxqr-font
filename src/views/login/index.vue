@@ -319,7 +319,9 @@ export default {
                 this.loading = false;
               });
             //     this.$router.push({ path: this.redirect || '/dashboard', query: this.otherQuery })
-          });
+          }).catch(err=>{
+            this.loading = false;
+          })
           // this.loading = true
           // this.$store.dispatch('user/login', this.loginForm)
           //   .then(() => {

@@ -153,7 +153,7 @@ export default {
         pageSize: 100,
         name: ''
       }).then((res) => {
-        this.roleList = res.data
+        this.roleList = res.data.rows
       })
     },
     changePage(e) {

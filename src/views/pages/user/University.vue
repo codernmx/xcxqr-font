@@ -41,7 +41,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination style="margin: 30px 0" background layout="total,prev, pager, next" :total="list.length" @current-change="changePage" />
+    <el-pagination style="margin: 30px 0" background layout="total,prev, pager, next" :total="search.total" @current-change="changePage" />
     <el-dialog :title="title" :visible.sync="dialog" width="40%" center>
       <div>
         <el-form ref="ruleForm" :model="ruleForm" label-width="100px" class="demo-ruleForm">
@@ -127,7 +127,7 @@ export default {
     },
     downLoad({ name }) {
       getCompressingFile({ folderName: name }).then(res => {
-        console.log(res, 'res')
+        console.log(this.config.value)
         if (res.code == 200) {
           window.open(this.config.value + res.data)
         } else {
@@ -136,7 +136,8 @@ export default {
       })
     },
     getImgUrl(row) {
-      const { name, number, suffix } = row
+      const { suffix } = row
+      const { name, number } = row.student
       // return this.config.value + `${this.showName}/${name}${number}${suffix}`
       const url = this.config.value + `university/${this.showName}/${number}${name}${suffix}`
       return url
@@ -197,8 +198,8 @@ export default {
     },
     fetchData() {
       getGatherList(this.search).then((res) => {
-        this.list = res.data
-        this.search.total = 1
+        this.list = res.data.rows
+        this.search.total = res.data.count
       })
     }
   }

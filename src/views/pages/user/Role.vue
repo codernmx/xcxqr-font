@@ -139,8 +139,8 @@ export default {
     fetchData () {
       getRoleList(this.search).then((res) => {
         console.log(res, 'res')
-        this.list = res.data
-        this.search.total = res.total
+        this.list = res.data.rows
+        this.search.total = res.data.count
       })
     }
   }

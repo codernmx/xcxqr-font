@@ -75,7 +75,7 @@ export function getConfigApi(params) {
 // 获取用户列表
 export function getUserList(params) {
   return request({
-    url: '/api/bjcx/user/list',
+    url: '/api/applet/user/list',
     method: 'get',
     params
   })
@@ -84,7 +84,7 @@ export function getUserList(params) {
 // 获取邀请了用户的列表
 export function getUserInviteList(params) {
   return request({
-    url: '/api/bjcx/user/list/have/children',
+    url: '/api/applet/user/list/have/children',
     method: 'get',
     params
   })
@@ -93,7 +93,7 @@ export function getUserInviteList(params) {
 /* 获取用户下角色信息 */
 export function getUserRoleById(params) {
   return request({
-    url: '/api/bjcx/user/detail',
+    url: '/api/applet/user/detail',
     method: 'get',
     params
   })
@@ -102,7 +102,7 @@ export function getUserRoleById(params) {
 /* 获取用户统计信息 */
 export function getUserTotal(params) {
   return request({
-    url: '/api/bjcx/user/total',
+    url: '/api/applet/user/total',
     method: 'get',
     params
   })
@@ -111,7 +111,7 @@ export function getUserTotal(params) {
 // 添加 用户
 export function addUser(data) {
   return request({
-    url: '/api/bjcx/user/insert',
+    url: '/api/applet/user/insert',
     method: 'POST',
     data
   })
@@ -119,7 +119,7 @@ export function addUser(data) {
 // 修改 用户
 export function updateUser(data) {
   return request({
-    url: '/api/bjcx/user/update',
+    url: '/api/applet/user/update',
     method: 'POST',
     data
   })
@@ -127,7 +127,7 @@ export function updateUser(data) {
 /* 修改用户状态 */
 export function updateUserStatus(data) {
   return request({
-    url: '/api/bjcx/user/updateStatus',
+    url: '/api/applet/user/updateStatus',
     method: 'POST',
     data
   })
@@ -135,7 +135,7 @@ export function updateUserStatus(data) {
 // 删除 用户
 export function delUser(params) {
   return request({
-    url: '/api/bjcx/user/delete',
+    url: '/api/applet/user/delete',
     method: 'get',
     params
   })
@@ -148,7 +148,7 @@ export function delUser(params) {
 // 获取用户列表
 export function getRoleList(params) {
   return request({
-    url: '/api/bjcx/role/list',
+    url: '/api/applet/role/list',
     method: 'get',
     params
   })
@@ -156,7 +156,7 @@ export function getRoleList(params) {
 // 添加 用户
 export function addRole(data) {
   return request({
-    url: '/api/bjcx/role/insert',
+    url: '/api/applet/role/insert',
     method: 'POST',
     data
   })
@@ -164,7 +164,7 @@ export function addRole(data) {
 // 修改 用户
 export function updateRole(data) {
   return request({
-    url: '/api/bjcx/role/update',
+    url: '/api/applet/role/update',
     method: 'POST',
     data
   })
@@ -172,7 +172,7 @@ export function updateRole(data) {
 // 删除 用户
 export function delRole(params) {
   return request({
-    url: '/api/bjcx/role/delete',
+    url: '/api/applet/role/delete',
     method: 'get',
     params
   })
@@ -185,7 +185,7 @@ export function delRole(params) {
 // 获取IP列表
 export function getLogList(params) {
   return request({
-    url: '/api/bjcx/log/list',
+    url: '/api/applet/log/list',
     method: 'get',
     params
   })
@@ -198,7 +198,7 @@ export function getLogList(params) {
 // 获取附件列表
 export function getFileList(params) {
   return request({
-    url: '/api/bjcx/file/list',
+    url: '/api/applet/file/list',
     method: 'get',
     params
   })
@@ -206,7 +206,7 @@ export function getFileList(params) {
 /* 删除附件 */
 export function delFile(data) {
   return request({
-    url: '/api/bjcx/file/del',
+    url: '/api/applet/file/del',
     method: 'post',
     data
   })
@@ -214,7 +214,7 @@ export function delFile(data) {
 /* 修改文件名 */
 export function fileUpadte(data) {
   return request({
-    url: '/api/bjcx/file/update',
+    url: '/api/applet/file/update',
     method: 'post',
     data
   })
@@ -227,7 +227,7 @@ export function fileUpadte(data) {
 // 获取IP列表
 export function getGatherList(params) {
   return request({
-    url: '/api/bjcx/gather/list',
+    url: '/api/applet/gather/list',
     method: 'get',
     params
   })
@@ -235,7 +235,7 @@ export function getGatherList(params) {
 // 添加收集项目
 export function addGather(data) {
   return request({
-    url: '/api/bjcx/gather/insert',
+    url: '/api/applet/gather/insert',
     method: 'POST',
     data
   })
@@ -243,7 +243,7 @@ export function addGather(data) {
 // 修改收集项目
 export function updateGather(data) {
   return request({
-    url: '/api/bjcx/gather/update',
+    url: '/api/applet/gather/update',
     method: 'POST',
     data
   })
@@ -251,7 +251,7 @@ export function updateGather(data) {
 // 删除 项目
 export function delGather(params) {
   return request({
-    url: '/api/bjcx/gather/delete',
+    url: '/api/applet/gather/delete',
     method: 'get',
     params
   })
@@ -259,7 +259,7 @@ export function delGather(params) {
 /* 获取已经上传的学生列表 */
 export function alreadyUpload(params) {
   return request({
-    url: '/api/bjcx/already/upload/list',
+    url: '/api/applet/already/upload/list',
     method: 'get',
     params
   })
@@ -267,7 +267,7 @@ export function alreadyUpload(params) {
 /* 下载压缩文件 */
 export function getCompressingFile(params) {
   return request({
-    url: '/api/bjcx/compressing/file',
+    url: '/api/applet/compressing/file',
     method: 'get',
     params
   })

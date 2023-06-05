@@ -46,8 +46,8 @@ export default {
     getDataList (params) {
       getLogList(params).then((res) => {
         console.log(res)
-        this.dataList = res.data
-        this.search.total = res.total
+        this.dataList = res.data.rows
+        this.search.total = res.data.count
       })
     }
   }

@@ -31,6 +31,8 @@
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="注册时间" />
+      <el-table-column prop="loginNum" label="登陆次数" />
+      <el-table-column prop="updateTime" label="最近登陆时间" />
     </el-table>
     <el-pagination
       style="margin: 30px 0"
@@ -40,7 +42,7 @@
       @current-change="changePage"
     />
 
-    <el-dialog :title="title" :visible.sync="dialog" width="50%" center>
+    <el-dialog :title="title" :visible.sync="dialog" width="70%" center>
       <el-table :data="showTable" border fit highlight-current-row>
         <el-table-column type="index" label="序号" width="100" align="center" />
         <el-table-column prop="avatar" label="头像" width="80">
@@ -55,6 +57,8 @@
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="注册时间" />
+        <el-table-column prop="loginNum" label="登陆次数" />
+        <el-table-column prop="updateTime" label="最近登陆时间" />
       </el-table>
     </el-dialog>
   </div>
@@ -186,8 +190,8 @@ export default {
     fetchData() {
       getUserInviteList(this.search).then((res) => {
         console.log(res, 'res')
-        this.list = res.data
-        this.search.total = res.total
+        this.list = res.data.rows
+        this.search.total = res.data.count
       })
     }
   }
