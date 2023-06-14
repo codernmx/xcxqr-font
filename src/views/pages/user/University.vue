@@ -63,8 +63,8 @@
     <el-dialog title="上传详细信息情况" :visible.sync="detail" width="50%" center>
       <el-table :data="alreadyUploadList" border fit highlight-current-row>
         <el-table-column type="index" label="序号" width="100" align="center" />
-        <el-table-column prop="name" label="姓名" />
-        <el-table-column prop="number" label="学号" />
+        <el-table-column prop="student.name" label="姓名" />
+        <el-table-column prop="student.number" label="学号" />
         <el-table-column label="图片" width="150" align="center">
           <template v-slot="scope">
             <el-image lazy style="width: 75px; height: 75px" :src="getImgUrl(scope.row)" fit="scale-down" :preview-src-list="[getImgUrl(scope.row)]" />
